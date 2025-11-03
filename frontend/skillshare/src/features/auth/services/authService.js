@@ -62,18 +62,15 @@ const refreshToken = async () => {
 // --- Change password ---
 const changePassword = async (passwordData) => {
   const headers = getAuthHeader();
-  const response = await API.post("/users/change-password/", passwordData, { headers });
+  const response = await API.post("/users/change-password/", passwordData, {
+    headers,
+  });
   return response.data;
 };
 
-
-
 const updateSettings = async (settingsData, token) => {
   try {
-    const response = await API.put("/users/settings/",
-      settingsData,
-     
-    );
+    const response = await API.put("/users/settings/", settingsData);
     return response.data;
   } catch (error) {
     console.error("Error updating settings:", error);

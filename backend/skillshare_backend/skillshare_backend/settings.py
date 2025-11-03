@@ -96,8 +96,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'skillshare_db',
         'USER': 'root',
-        'PASSWORD': 'Root123$',
-        'HOST': '127.0.0.1',
+        'PASSWORD': '',
+        'HOST': 'localhost',
         'PORT': '3306',
     }
 }

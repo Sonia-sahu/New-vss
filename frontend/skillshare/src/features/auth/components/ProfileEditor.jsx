@@ -19,8 +19,10 @@ export default function ProfileEditor() {
     last_name: "",
     bio: "",
     expertise: "",
-    profile_picture: "",
   });
+
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState("");
 
   useEffect(() => {
     dispatch(fetchProfile());
@@ -33,8 +35,10 @@ export default function ProfileEditor() {
         last_name: user.last_name || "",
         bio: user.bio || "",
         expertise: user.expertise || "",
-        profile_picture: user.profile_picture || "",
       });
+      if (user.profile_picture) {
+        setPreviewUrl(user.profile_picture);
+      }
     }
   }, [user]);
 
@@ -42,8 +46,25 @@ export default function ProfileEditor() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setSelectedFile(file);
+    if (file) {
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
   const handleSubmit = () => {
-    dispatch(updateProfile(form));
+    const formData = new FormData();
+    formData.append("first_name", form.first_name);
+    formData.append("last_name", form.last_name);
+    formData.append("bio", form.bio);
+    formData.append("expertise", form.expertise);
+    if (selectedFile) {
+      formData.append("profile_picture", selectedFile);
+    }
+
+    dispatch(updateProfile(formData));
   };
 
   return (
@@ -78,19 +99,20 @@ export default function ProfileEditor() {
           value={form.expertise}
           onChange={handleChange}
         />
-        <TextField
-          label="Profile Picture URL"
-          name="profile_picture"
-          value={form.profile_picture}
-          onChange={handleChange}
-        />
-        {form.profile_picture && (
+        <Typography variant="subtitle1">Upload Profile Picture</Typography>
+        <input type="file" accept="image/*" onChange={handleFileChange} />
+        <Typography variant="caption" color="text.secondary">
+          Choose an image file from your device (JPG, PNG, etc.)
+        </Typography>
+
+        {previewUrl && (
           <Avatar
-            src={form.profile_picture}
-            alt="Profile"
+            src={previewUrl}
+            alt="Profile Preview"
             sx={{ width: 80, height: 80 }}
           />
         )}
+
         <Button variant="contained" onClick={handleSubmit}>
           Save Changes
         </Button>
