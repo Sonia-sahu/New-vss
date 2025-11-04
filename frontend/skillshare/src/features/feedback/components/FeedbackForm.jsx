@@ -1,51 +1,36 @@
+// src/components/FeedbackForm.jsx
+
 import { useState } from "react";
+import { Button, TextField } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { submitFeedback } from "../actions/feedbackActions";
-import { TextField, Button, Box, MenuItem } from "@mui/material";
+import { submitWorkshopFeedback } from "../features/feedback/actions/feedbackActions";
 
-export default function FeedbackForm({ recipientId, workshopId }) {
+const FeedbackForm = ({ workshopId }) => {
+  const [feedback, setFeedback] = useState("");
   const dispatch = useDispatch();
-  const [form, setForm] = useState({
-    recipient: recipientId,
-    workshop: workshopId,
-    rating: 5,
-    comment: "",
-  });
 
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
-  const handleSubmit = () => dispatch(submitFeedback(form));
+  const handleFeedbackChange = (e) => setFeedback(e.target.value);
+
+  const handleSubmit = () => {
+    dispatch(submitWorkshopFeedback({ workshopId, feedback }));
+  };
 
   return (
-    <Box sx={{ maxWidth: 500, mx: "auto", mt: 4 }}>
+    <div>
       <TextField
-        select
-        fullWidth
-        label="Rating"
-        name="rating"
-        value={form.rating}
-        onChange={handleChange}
-        margin="normal"
-      >
-        {[1, 2, 3, 4, 5].map((r) => (
-          <MenuItem key={r} value={r}>
-            {r}
-          </MenuItem>
-        ))}
-      </TextField>
-      <TextField
-        fullWidth
-        label="Comment"
-        name="comment"
+        label="Provide your feedback"
         multiline
-        rows={3}
-        value={form.comment}
-        onChange={handleChange}
-        margin="normal"
+        rows={4}
+        value={feedback}
+        onChange={handleFeedbackChange}
+        variant="outlined"
+        fullWidth
       />
-      <Button variant="contained" fullWidth onClick={handleSubmit}>
+      <Button onClick={handleSubmit} variant="contained">
         Submit Feedback
       </Button>
-    </Box>
+    </div>
   );
-}
+};
+
+export default FeedbackForm;

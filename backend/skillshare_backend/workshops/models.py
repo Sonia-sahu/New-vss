@@ -16,6 +16,11 @@ class Workshop(models.Model):
     duration_minutes = models.PositiveIntegerField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='upcoming')
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    # Jitsi Meet integration fields
+    enable_live_session = models.BooleanField(default=False)
+    meeting_room_name = models.CharField(max_length=255, blank=True, null=True)
+    meeting_url = models.URLField(max_length=500, blank=True, null=True)
 
     def __str__(self):
         return f"{self.title} ({self.status})"

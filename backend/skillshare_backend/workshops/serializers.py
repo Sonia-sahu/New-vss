@@ -8,7 +8,8 @@ class WorkshopSerializer(serializers.ModelSerializer):
         model = Workshop
         fields = [
             'id', 'host', 'host_username', 'title', 'description',
-            'skill', 'date', 'duration_minutes', 'status', 'created_at'
+            'skill', 'date', 'duration_minutes', 'status', 'created_at',
+            'enable_live_session', 'meeting_room_name', 'meeting_url'
         ]
         read_only_fields = ['id', 'host', 'created_at', 'host_username']
 
@@ -20,4 +21,4 @@ class WorkshopRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkshopRegistration
         fields = ['id', 'workshop', 'workshop_title', 'user', 'user_username', 'registered_at', 'attended']
-        read_only_fields = ['id', 'registered_at', 'workshop_title', 'user_username']
+        read_only_fields = ['id', 'registered_at', 'workshop_title', 'user_username', 'user']
