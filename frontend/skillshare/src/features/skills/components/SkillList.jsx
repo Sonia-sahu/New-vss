@@ -1,22 +1,192 @@
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSkills } from "../actions/skillActions";
-import SkillCard from "./SkillCard";
-import { Box } from "@mui/material";
+import { fetchSkills, deleteSkill, updateSkill } from "../actions/skillActions";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
 
-export default function SkillList() {
+export default function SkillList({ userId: propUserId }) {
   const dispatch = useDispatch();
   const skills = useSelector((state) => state.skills.skills);
+  const userId = propUserId || useSelector((state) => state.community.user?.id);
+
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [selectedSkillId, setSelectedSkillId] = useState(null);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [editSkill, setEditSkill] = useState({
+    title: "",
+    description: "",
+    category: "",
+  });
 
   useEffect(() => {
-    dispatch(fetchSkills());
-  }, [dispatch]);
+    if (userId) {
+      dispatch(fetchSkills(userId));
+    }
+  }, [dispatch, userId]);
+
+  const handleDeleteClick = (skillId) => {
+    setSelectedSkillId(skillId);
+    setOpenDeleteDialog(true);
+  };
+
+  const handleConfirmDelete = () => {
+    dispatch(deleteSkill(selectedSkillId));
+    setOpenDeleteDialog(false);
+  };
+
+  const handleCancelDelete = () => {
+    setOpenDeleteDialog(false);
+  };
+
+  const handleEditClick = (skill) => {
+    setSelectedSkillId(skill.id);
+    setEditSkill({
+      title: skill.title,
+      description: skill.description,
+      category: skill.category,
+    });
+    setOpenEditDialog(true);
+  };
+
+  const handleEditSubmit = () => {
+    if (selectedSkillId) {
+      console.log("Updating skill with ID:", selectedSkillId);
+      dispatch(updateSkill({ id: selectedSkillId, data: editSkill }));
+      setOpenEditDialog(false);
+    } else {
+      console.error("Skill ID is missing");
+    }
+  };
+
+  if (!Array.isArray(skills) || skills.length === 0) {
+    return <div>No skills to display</div>;
+  }
 
   return (
-    <Box sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
-      {skills.map((skill) => (
-        <SkillCard key={skill.id} skill={skill} />
-      ))}
-    </Box>
+    <div>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Title</TableCell>
+              <TableCell>Description</TableCell>
+              <TableCell>Category</TableCell>
+              <TableCell>Certification</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {skills.map((skill) => (
+              <TableRow key={skill.id}>
+                <TableCell>{skill.title}</TableCell>
+                <TableCell>{skill.description}</TableCell>
+
+                <TableCell>
+                  {skill.certification_url ? (
+                    <a
+                      href={skill.certification_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View PDF
+                    </a>
+                  ) : (
+                    "No certification uploaded"
+                  )}
+                </TableCell>
+
+                <TableCell>{skill.category}</TableCell>
+                <TableCell>{skill.status}</TableCell>
+                <TableCell>
+                  <Button onClick={() => handleEditClick(skill)}>Edit</Button>
+                  <Button onClick={() => handleDeleteClick(skill.id)}>
+                    Delete
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={openDeleteDialog} onClose={handleCancelDelete}>
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          Are you sure you want to delete this skill?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelDelete} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleConfirmDelete} color="primary">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Edit Skill Dialog */}
+      <Dialog open={openEditDialog} onClose={() => setOpenEditDialog(false)}>
+        <DialogTitle>Edit Skill</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Title"
+            fullWidth
+            value={editSkill.title}
+            onChange={(e) =>
+              setEditSkill({ ...editSkill, title: e.target.value })
+            }
+            margin="normal"
+          />
+          <TextField
+            label="Description"
+            fullWidth
+            value={editSkill.description}
+            onChange={(e) =>
+              setEditSkill({ ...editSkill, description: e.target.value })
+            }
+            margin="normal"
+          />
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Category</InputLabel>
+            <Select
+              value={editSkill.category}
+              onChange={(e) =>
+                setEditSkill({ ...editSkill, category: e.target.value })
+              }
+            >
+              <MenuItem value="tech">Tech</MenuItem>
+              <MenuItem value="art">Art</MenuItem>
+              <MenuItem value="cooking">Cooking</MenuItem>
+            </Select>
+          </FormControl>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenEditDialog(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleEditSubmit} color="primary">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
   );
 }

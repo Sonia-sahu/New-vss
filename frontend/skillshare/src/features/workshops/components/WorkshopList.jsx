@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchWorkshops } from "../actions/workshopActions";
-import WorkshopCard from "./WorkshopCard";
+
 import { Box } from "@mui/material";
+import WorkshopCard from "./WorkshopCard";
 
 export default function WorkshopList() {
   const dispatch = useDispatch();

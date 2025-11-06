@@ -1,8 +1,10 @@
 from pathlib import Path
 from datetime import timedelta
 from corsheaders.defaults import default_headers
-
+import os
 BASE_DIR = Path(__file__).resolve().parent.parent
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 SECRET_KEY = 'django-insecure-ondsrqx(p5n_9o7)h+&gfj=u=%if*dp7)mml9!+b+j@aq1l9y5'
 DEBUG = True
@@ -18,7 +20,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'workshops.apps.WorkshopsConfig', 
     # Third-party apps
     'corsheaders',
     'rest_framework',
@@ -28,11 +30,13 @@ INSTALLED_APPS = [
     # Custom apps
     'users',
     'skills',
-    'workshops',
+    # 'workshops',
     'messaging',
     'feedback',
-    'community',
-    'notifications',
+   'community.apps.CommunityConfig',
+
+   
+    'notifications.apps.NotificationsConfig',
     'adminpanel',
 ]
 
@@ -51,13 +55,13 @@ ROOT_URLCONF = 'skillshare_backend.urls'
 WSGI_APPLICATION = 'skillshare_backend.wsgi.application'
 ASGI_APPLICATION = 'skillshare_backend.asgi.application'
 
-# -------------------------------
-# CORS Settings
-# -------------------------------
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_HEADERS = list(default_headers) + [
     'authorization',
+    'content-type',
 ]
+
+CORS_EXPOSE_HEADERS = ['Content-Type', 'Authorization']
 CORS_ALLOW_CREDENTIALS = True
 
 # -------------------------------
@@ -68,6 +72,8 @@ AUTH_USER_MODEL = 'users.User'
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
+USE_TZ = True
+TIME_ZONE = 'Asia/Kolkata'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -140,3 +146,22 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# -------------------------------
+# Channels and WebSocket Setup
+# -------------------------------
+
+# Channel layer setup (Using Redis for WebSockets)
+# You can install Redis and configure it to run locally or use a cloud service like RedisLabs.
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
+
+# -------------------------------
+# ASGI Configuration (WebSocket handling)
+# -------------------------------
+ASGI_APPLICATION = 'skillshare_backend.asgi.application'

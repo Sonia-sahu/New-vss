@@ -5,4 +5,7 @@ urlpatterns = [
     path('skills/<int:pk>/moderate/', SkillModerationView.as_view(), name='moderate_skill'),
     path('users/', UserManagementView.as_view(), name='manage_users'),
     path('logs/', ModerationLogView.as_view(), name='moderation_logs'),
+
+    path('users/<int:pk>/', UserManagementView.as_view(), name='edit_delete_user'),  # PUT/PATCH/DELETE
+
 ]

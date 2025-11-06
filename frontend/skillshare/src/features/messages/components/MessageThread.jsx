@@ -1,17 +1,118 @@
-import { Box, Typography } from "@mui/material";
+import React, { useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getMessages } from "../actions/chatActions";
+import { Box, Typography, CircularProgress } from "@mui/material";
+import MessageInput from "./MessageInput";
 
-export default function MessageThread({ messages }) {
+const MessageThread = () => {
+  const { chatId } = useParams();
+  const dispatch = useDispatch();
+  const messagesEndRef = useRef(null);
+
+  const {
+    messages = [],
+    loading,
+    error,
+  } = useSelector((state) => state.messages);
+
+  useEffect(() => {
+    if (chatId) {
+      dispatch(getMessages(chatId));
+    }
+  }, [dispatch, chatId]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  if (loading)
+    return (
+      <CircularProgress sx={{ display: "block", margin: "0 auto", mt: 4 }} />
+    );
+
+  if (error)
+    return (
+      <Typography color="error" sx={{ textAlign: "center", mt: 4 }}>
+        {typeof error === "string"
+          ? error
+          : error.message || error.error || JSON.stringify(error)}
+      </Typography>
+    );
+
   return (
-    <Box sx={{ p: 2 }}>
-      {messages.map((msg) => (
-        <Box key={msg.id} sx={{ mb: 2 }}>
-          <Typography variant="subtitle2">
-            {msg.sender.username} → {msg.receiver.username}
+    <Box
+      sx={{
+        p: 2,
+        bgcolor: "background.default", // ✅ dark background
+        borderRadius: 3,
+        boxShadow: 2,
+        maxWidth: "800px",
+        margin: "0 auto",
+        color: "text.primary", // ✅ readable text
+      }}
+    >
+      <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}></Typography>
+
+      {/* Chat Messages */}
+      <Box
+        sx={{
+          border: "1px solid rgba(255,255,255,0.1)", // ✅ subtle border
+          borderRadius: 2,
+          p: 2,
+          mb: 2,
+          height: "60vh",
+          overflowY: "auto",
+          display: "flex",
+          flexDirection: "column",
+          gap: 1.5,
+          bgcolor: "background.paper", // ✅ dark paper background
+        }}
+      >
+        {messages.length > 0 ? (
+          messages.map((msg) => (
+            <Box
+              key={msg.id}
+              sx={{
+                alignSelf: msg.is_sender ? "flex-end" : "flex-start",
+                bgcolor: msg.is_sender ? "primary.main" : "grey.800", // ✅ dark bubble
+                color: msg.is_sender ? "#fff" : "text.primary",
+                px: 2,
+                py: 1.5,
+                borderRadius: 2,
+                maxWidth: "70%",
+                boxShadow: 1,
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                {msg.sender?.username || "Unknown"}:
+              </Typography>
+              <Typography variant="body1">{msg.content || ""}</Typography>
+            </Box>
+          ))
+        ) : (
+          <Typography
+            sx={{ textAlign: "center", color: "text.secondary", mt: 2 }}
+          >
+            No messages yet. Start the conversation below 👇
           </Typography>
-          <Typography variant="body1">{msg.content}</Typography>
-          <Typography variant="caption">{msg.timestamp}</Typography>
-        </Box>
-      ))}
+        )}
+        <Box ref={messagesEndRef} />
+      </Box>
+
+      {/* Message Input */}
+      <Box
+        sx={{
+          borderTop: "1px solid rgba(255,255,255,0.1)", // ✅ subtle divider
+          pt: 2,
+          bgcolor: "background.paper", // ✅ consistent input background
+          boxShadow: "0 -2px 8px rgba(0,0,0,0.2)", // ✅ stronger shadow for depth
+        }}
+      >
+        <MessageInput chatId={chatId} />
+      </Box>
     </Box>
   );
-}
+};
+
+export default MessageThread;

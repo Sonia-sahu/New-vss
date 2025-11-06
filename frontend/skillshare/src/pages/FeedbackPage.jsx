@@ -3,9 +3,9 @@ import { Container, Typography } from "@mui/material";
 
 export default function FeedbackPage() {
   return (
-    <Container sx={{ mt: 4 }}>
-      <Typography variant="h5" gutterBottom>
-        Feedback Received
+    <Container sx={{ textAlign: "left" }}>
+      <Typography variant="h4" gutterBottom sx={{ textAlign: "left" }}>
+        Feedback Dashboard
       </Typography>
       <FeedbackList />
     </Container>

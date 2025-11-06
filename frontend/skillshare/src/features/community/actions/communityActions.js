@@ -1,26 +1,109 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import API from "../../../services/api";
 
+// ✅ Explore users
 export const exploreUsers = createAsyncThunk(
   "community/exploreUsers",
-  async () => {
-    const res = await API.get("/community/explore/");
-    return res.data;
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await API.get("/community/explore/");
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to load users");
+    }
   }
 );
 
+// ✅ Toggle Follow/Unfollow user
+export const toggleFollowUser = createAsyncThunk(
+  "community/toggleFollowUser",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const res = await API.post(`/community/follow/${userId}/`);
+      // Backend returns { message, is_following }
+      return { userId, isFollowing: res.data.is_following };
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Follow/Unfollow failed");
+    }
+  }
+);
+
+// ✅ Get followers of current user
+export const getFollowers = createAsyncThunk(
+  "community/getFollowers",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await API.get("/community/followers/");
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || "Failed to fetch followers"
+      );
+    }
+  }
+);
+
+// ✅ Get following list of current user
+export const getFollowing = createAsyncThunk(
+  "community/getFollowing",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await API.get("/community/following/");
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || "Failed to fetch following"
+      );
+    }
+  }
+);
+
+// ✅ Follow a user
 export const followUser = createAsyncThunk(
   "community/followUser",
-  async (data) => {
-    const res = await API.post("/community/follow/", data);
-    return res.data;
+  async (data, { rejectWithValue }) => {
+    try {
+      const res = await API.post(`/community/follow/${data.following}/`);
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Follow failed");
+    }
   }
 );
 
+// ✅ Unfollow a user
 export const unfollowUser = createAsyncThunk(
   "community/unfollowUser",
-  async (followingId) => {
-    await API.delete(`/community/unfollow/${followingId}/`);
-    return followingId;
+  async (userId, { rejectWithValue }) => {
+    try {
+      const res = await API.post(`/community/unfollow/${userId}/`);
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Unfollow failed");
+    }
+  }
+);
+// 🔹 Fetch skills for a specific user
+export const fetchSkillAction = createAsyncThunk(
+  "community/fetchSkillAction",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await API.get(`/community/skills/${userId}/`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to load skills");
+    }
+  }
+);
+// 🔹 Fetch profile data for a specific user
+export const fetchProfileAction = createAsyncThunk(
+  "community/fetchProfileAction",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await API.get(`/community/profile/${userId}/`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to load profile");
+    }
   }
 );

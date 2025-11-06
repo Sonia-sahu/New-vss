@@ -1,13 +1,23 @@
 import ExploreUsersList from "../features/community/components/ExploreUsersList";
-import { Container, Typography } from "@mui/material";
+import { Container, Divider, Typography } from "@mui/material";
+import WorkshopGallery from "../features/workshops/components/WorkshopGallery";
 
 export default function CommunityPage() {
   return (
-    <Container sx={{ mt: 4 }}>
+    <Container>
       <Typography variant="h5" gutterBottom>
         Explore Community
       </Typography>
+
       <ExploreUsersList />
+
+      <Divider sx={{ my: 4 }} />
+
+      <Typography variant="h5" gutterBottom>
+        Workshops
+      </Typography>
+
+      <WorkshopGallery />
     </Container>
   );
 }

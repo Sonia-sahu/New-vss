@@ -2,11 +2,21 @@ import { Card, CardContent, Typography, Chip, Stack } from "@mui/material";
 import MarkAsReadButton from "./MarkAsReadButton";
 
 export default function NotificationItem({ notification }) {
+  if (!notification) return null; // Prevent rendering if notification is undefined
+
+  const {
+    is_read = false,
+    content = "No content available",
+    type = "Info",
+    created_at = "Unknown date",
+    id,
+  } = notification;
+
   return (
     <Card
       sx={{
         margin: 2,
-        backgroundColor: notification.is_read ? "#f5f5f5" : "#fff",
+        backgroundColor: is_read ? "#f5f5f5" : "#fff",
       }}
     >
       <CardContent>
@@ -15,11 +25,11 @@ export default function NotificationItem({ notification }) {
           justifyContent="space-between"
           alignItems="center"
         >
-          <Typography variant="body1">{notification.content}</Typography>
-          <Chip label={notification.type} size="small" />
+          <Typography variant="body1">{content}</Typography>
+          <Chip label={type} size="small" />
         </Stack>
-        <Typography variant="caption">{notification.created_at}</Typography>
-        {!notification.is_read && <MarkAsReadButton id={notification.id} />}
+        <Typography variant="caption">{created_at}</Typography>
+        {!is_read && id && <MarkAsReadButton id={id} />}
       </CardContent>
     </Card>
   );

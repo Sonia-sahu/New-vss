@@ -73,11 +73,7 @@ export default function UserSettingsForm() {
           label="Public Profile"
         />
 
-        <Button
-          variant="contained"
-          onClick={handleSubmit}
-          disabled={loading}
-        >
+        <Button variant="contained" onClick={handleSubmit} disabled={loading}>
           {loading ? "Saving..." : "Save Settings"}
         </Button>
       </Stack>

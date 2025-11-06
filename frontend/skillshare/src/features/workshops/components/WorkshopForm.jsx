@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createWorkshop } from "../actions/workshopActions";
 import { fetchSkills } from "../../skills/actions/skillActions";
+import { DateTimePicker } from "@mui/x-date-pickers";
 import {
   TextField,
   Button,
@@ -13,17 +14,18 @@ import {
   FormControlLabel,
   Switch,
 } from "@mui/material";
+import { toast } from "react-toastify";
 
 export default function WorkshopForm() {
   const dispatch = useDispatch();
   const { skills, loading } = useSelector((state) => state.skills);
-  const { user } = useSelector((state) => state.auth); // assuming auth slice has user info
+  const { user } = useSelector((state) => state.auth);
 
   const [form, setForm] = useState({
     id: "",
     title: "",
     description: "",
-    date: "",
+    date: new Date(),
     duration_minutes: 60,
     status: "upcoming",
     created_at: new Date().toISOString().slice(0, 10),
@@ -81,11 +83,34 @@ export default function WorkshopForm() {
       return;
     }
 
-    dispatch(createWorkshop(form));
+    const isoDate = new Date(form.date).toISOString();
+
+    const payload = {
+      ...form,
+      date: isoDate,
+    };
+
+    dispatch(createWorkshop(payload));
+    toast.success("Workshop created successfully!", {
+      position: "top-center",
+      autoClose: 3000,
+    });
   };
 
   return (
-    <Paper elevation={3} sx={{ maxWidth: 600, mx: "auto", mt: 5, p: 4 }}>
+    <Paper
+      elevation={3}
+      sx={{
+        width: "100%",
+        maxWidth: 800,
+        mx: "auto",
+        mt: 5,
+        p: { xs: 2, sm: 3, md: 4 },
+        bgcolor: "#9a9898ff",
+        color: "#1a1a1a",
+        borderRadius: 2,
+      }}
+    >
       <Typography variant="h5" gutterBottom>
         Create New Workshop
       </Typography>
@@ -96,6 +121,7 @@ export default function WorkshopForm() {
           value={form.id}
           onChange={handleChange}
           fullWidth
+          sx={{ backgroundColor: "#f9fafb", borderRadius: 1 }}
         />
         <TextField
           label="Title"
@@ -103,6 +129,7 @@ export default function WorkshopForm() {
           value={form.title}
           onChange={handleChange}
           fullWidth
+          sx={{ backgroundColor: "#f9fafb", borderRadius: 1 }}
         />
         <TextField
           label="Description"
@@ -112,6 +139,7 @@ export default function WorkshopForm() {
           multiline
           rows={3}
           fullWidth
+          sx={{ backgroundColor: "#f9fafb", borderRadius: 1 }}
         />
         <TextField
           select
@@ -122,6 +150,7 @@ export default function WorkshopForm() {
           fullWidth
           disabled={loading}
           helperText={loading ? "Loading skills..." : "Select a skill"}
+          sx={{ backgroundColor: "#f9fafb", borderRadius: 1 }}
         >
           <MenuItem value="" disabled>
             -- Select a skill --
@@ -132,14 +161,20 @@ export default function WorkshopForm() {
             </MenuItem>
           ))}
         </TextField>
-        <TextField
-          label="Date"
-          name="date"
-          type="date"
+        <DateTimePicker
+          label="Workshop Date & Time"
           value={form.date}
-          onChange={handleChange}
-          InputLabelProps={{ shrink: true }}
-          fullWidth
+          onChange={(newValue) => setForm({ ...form, date: newValue })}
+          ampm
+          minutesStep={5}
+          disablePast
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              fullWidth
+              sx={{ backgroundColor: "#f9fafb", borderRadius: 1 }}
+            />
+          )}
         />
         <TextField
           label="Duration (minutes)"
@@ -148,6 +183,7 @@ export default function WorkshopForm() {
           value={form.duration_minutes}
           onChange={handleChange}
           fullWidth
+          sx={{ backgroundColor: "#f9fafb", borderRadius: 1 }}
         />
         <TextField
           select
@@ -156,6 +192,7 @@ export default function WorkshopForm() {
           value={form.status}
           onChange={handleChange}
           fullWidth
+          sx={{ backgroundColor: "#f9fafb", borderRadius: 1 }}
         >
           {["upcoming", "completed", "cancelled"].map((status) => (
             <MenuItem key={status} value={status}>
@@ -169,6 +206,7 @@ export default function WorkshopForm() {
           value={form.host_id}
           onChange={handleChange}
           fullWidth
+          sx={{ backgroundColor: "#f9fafb", borderRadius: 1 }}
         />
         <TextField
           label="Created At"
@@ -178,6 +216,7 @@ export default function WorkshopForm() {
           onChange={handleChange}
           InputLabelProps={{ shrink: true }}
           fullWidth
+          sx={{ backgroundColor: "#f9fafb", borderRadius: 1 }}
         />
 
         <FormControlLabel
@@ -200,6 +239,7 @@ export default function WorkshopForm() {
               onChange={handleChange}
               fullWidth
               helperText="This will be used to identify the meeting room"
+              sx={{ backgroundColor: "#f9fafb", borderRadius: 1 }}
             />
             <TextField
               label="Meeting URL"
@@ -208,6 +248,7 @@ export default function WorkshopForm() {
               onChange={handleChange}
               fullWidth
               helperText="Full URL to the Jitsi meeting"
+              sx={{ backgroundColor: "#f9fafb", borderRadius: 1 }}
             />
           </>
         )}

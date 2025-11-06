@@ -9,7 +9,9 @@ export const registerUser = createAsyncThunk(
     try {
       return await authService.register(userData);
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || "Registration failed");
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Registration failed"
+      );
     }
   }
 );
@@ -20,8 +22,16 @@ export const loginUser = createAsyncThunk(
   async (credentials, thunkAPI) => {
     try {
       const data = await authService.login(credentials);
-      setToken(data.access); // store token in localStorage
-      return data;
+      setToken(data.access);
+
+      // Fetch user profile after login
+      const profile = await authService.getProfile();
+
+      return {
+        access: data.access,
+        refresh: data.refresh,
+        user: profile, // ✅ include user object
+      };
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || "Login failed");
     }
@@ -35,7 +45,9 @@ export const fetchProfile = createAsyncThunk(
     try {
       return await authService.getProfile();
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || "Failed to fetch profile");
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Failed to fetch profile"
+      );
     }
   }
 );
@@ -47,7 +59,9 @@ export const updateProfile = createAsyncThunk(
     try {
       return await authService.updateProfile(updatedData);
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || "Failed to update profile");
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Failed to update profile"
+      );
     }
   }
 );
@@ -74,21 +88,26 @@ export const changePassword = createAsyncThunk(
     try {
       return await authService.changePassword(passwordData);
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || "Password change failed");
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Password change failed"
+      );
     }
   }
 );
 
 // --- Logout User ---
-export const logoutUser = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
-  try {
-    await authService.logout();
-    removeToken();
-    return true;
-  } catch (error) {
-    return thunkAPI.rejectWithValue("Logout failed");
+export const logoutUser = createAsyncThunk(
+  "auth/logout",
+  async (_, thunkAPI) => {
+    try {
+      await authService.logout();
+      removeToken();
+      return true;
+    } catch (error) {
+      return thunkAPI.rejectWithValue("Logout failed");
+    }
   }
-});
+);
 
 // --- Fetch User Settings ---
 export const fetchSettings = createAsyncThunk(
@@ -98,7 +117,9 @@ export const fetchSettings = createAsyncThunk(
       const data = await authService.getSettings();
       return data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || "Failed to fetch user settings");
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Failed to fetch user settings"
+      );
     }
   }
 );
@@ -111,7 +132,9 @@ export const updateSettings = createAsyncThunk(
       const data = await authService.updateSettings(settingsData);
       return data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || "Failed to update settings");
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Failed to update settings"
+      );
     }
   }
 );

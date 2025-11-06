@@ -1,6 +1,7 @@
 from rest_framework import generics, permissions
 from .models import Feedback
 from .serializers import FeedbackSerializer
+from workshops.models import Workshop
 
 class SubmitFeedbackView(generics.CreateAPIView):
     queryset = Feedback.objects.all()
@@ -8,7 +9,16 @@ class SubmitFeedbackView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(reviewer=self.request.user)
+        workshop_id = self.request.data.get("workshopId")
+        try:
+            workshop = Workshop.objects.get(id=workshop_id)
+        except Workshop.DoesNotExist:
+            workshop = None
+
+        serializer.save(
+            reviewer=self.request.user,
+            workshop=workshop
+        )
 
 
 class ReceivedFeedbackListView(generics.ListAPIView):

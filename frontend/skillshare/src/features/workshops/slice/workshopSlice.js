@@ -66,17 +66,19 @@ const workshopSlice = createSlice({
         }
       })
       .addCase(registerWorkshop.fulfilled, (state, action) => {
-        const newRegistration = action.payload;
-        const exists = state.myRegistrations.some(
-          (reg) =>
-            Number(reg.workshop) === Number(newRegistration.workshop) &&
-            Number(reg.user) === Number(newRegistration.user)
-        );
-        if (!exists) {
-          state.myRegistrations.push(newRegistration);
-        }
         state.registerStatus = "succeeded";
+        if (action.payload) {
+          const exists = state.myRegistrations?.some(
+            (r) => Number(r.id) === Number(action.payload.id)
+          );
+          if (!exists)
+            state.myRegistrations = [
+              ...(state.myRegistrations || []),
+              action.payload,
+            ];
+        }
       })
+
       .addCase(fetchMyRegistrations.fulfilled, (state, action) => {
         state.myRegistrations = action.payload;
       });

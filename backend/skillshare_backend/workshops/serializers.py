@@ -15,6 +15,7 @@ class WorkshopSerializer(serializers.ModelSerializer):
 
 
 class WorkshopRegistrationSerializer(serializers.ModelSerializer):
+    workshop = serializers.PrimaryKeyRelatedField(read_only=True)
     workshop_title = serializers.ReadOnlyField(source='workshop.title')
     user_username = serializers.ReadOnlyField(source='user.username')
 

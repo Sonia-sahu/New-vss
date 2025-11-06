@@ -1,11 +1,20 @@
 from rest_framework import serializers
-from .models import Messaging
+from .models import Message
+from django.contrib.auth.models import User
 
-class MessagingSerializer(serializers.ModelSerializer):
-    sender_username = serializers.ReadOnlyField(source='sender.username')
-    receiver_username = serializers.ReadOnlyField(source='receiver.username')
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username']
+class MessageSerializer(serializers.ModelSerializer):
+    sender = serializers.SerializerMethodField()
 
     class Meta:
-        model = Messaging
-        fields = ['id', 'sender', 'sender_username', 'receiver', 'receiver_username', 'content', 'timestamp', 'is_read']
-        read_only_fields = ['id', 'timestamp', 'sender_username', 'receiver_username']
+        model = Message
+        fields = ['sender', 'content', 'timestamp']
+
+    def get_sender(self, obj):
+        if obj.sender:
+            return {"id": obj.sender.id, "username": obj.sender.username}
+        return {"id": None, "username": "Unknown"}
+

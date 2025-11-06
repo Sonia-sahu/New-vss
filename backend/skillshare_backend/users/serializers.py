@@ -19,6 +19,9 @@ class UserSerializer(serializers.ModelSerializer):
             "profile_picture",
             "expertise",
             "password",
+            "is_admin",
+            "is_superuser",
+            "is_staff",
         ]
 
 

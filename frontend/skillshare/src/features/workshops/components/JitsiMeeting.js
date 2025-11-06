@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Box, Button, Typography, Paper } from "@mui/material";
 import { useSelector } from "react-redux";
+import { markWorkshopAttended } from "../actions/workshopActions";
 
 export default function JitsiMeeting() {
   const { workshopId } = useParams();
@@ -16,6 +17,14 @@ export default function JitsiMeeting() {
   const workshops = useSelector((state) => state.workshops.workshops) || [];
   const workshop = workshops.find((w) => w.id === workshopId);
 
+  api.addEventListener("readyToClose", async () => {
+    try {
+      await dispatch(markWorkshopAttended(workshopId));
+    } catch (err) {
+      console.error("Failed to mark attendance:", err);
+    }
+    navigate(`/workshop/${workshopId}`);
+  });
   useEffect(() => {
     if (!workshop || !workshop.enable_live_session) {
       setError("This workshop does not have a live session enabled.");

@@ -1,15 +1,17 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AppRouter from "../router/AppRouter";
-import DashboardLayout from "../layouts/DashboardLayout";
+import { useEffect } from "react";
+import { fetchMyRegistrations } from "../features/workshops/actions/workshopActions";
 
 export default function AuthWrapper() {
-  const { token } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
 
-  return token ? (
-    <DashboardLayout>
-      <AppRouter />
-    </DashboardLayout>
-  ) : (
-    <AppRouter />
-  );
+  useEffect(() => {
+    if (user) {
+      dispatch(fetchMyRegistrations());
+    }
+  }, [dispatch, user]);
+
+  return <AppRouter />;
 }

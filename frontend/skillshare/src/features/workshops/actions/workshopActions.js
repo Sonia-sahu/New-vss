@@ -104,9 +104,6 @@ export const fetchMyRegistrations = createAsyncThunk(
     try {
       const res = await API.get("/workshops/my-registrations/");
 
-      // Log the response data for debugging
-      console.log("Fetched registrations:", res.data);
-
       // If the response is empty, you can handle it here if needed.
       if (!res.data || res.data.length === 0) {
         console.log("No registrations found.");
@@ -131,3 +128,6 @@ export const fetchMyRegistrations = createAsyncThunk(
     }
   }
 );
+export const markWorkshopAttended = (workshopId) => async () => {
+  await API.patch(`/workshops/${workshopId}/attend/`);
+};
