@@ -9,7 +9,13 @@ import {
   CardContent,
   Avatar,
 } from "@mui/material";
-import { Group, Chat, School, Feedback } from "@mui/icons-material";
+import {
+  Group,
+  Chat,
+  School,
+  Feedback,
+  VideoLibrary,
+} from "@mui/icons-material";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
@@ -39,6 +45,12 @@ export default function DashboardPage() {
       description: "Share your feedback to improve the platform.",
       icon: <Feedback fontSize="large" color="primary" />,
       path: "/feedback",
+    },
+    {
+      title: "Tutorials",
+      description: "Share your knowledge by posting tutorials.",
+      icon: <VideoLibrary fontSize="large" color="primary" />,
+      path: "/community/tutorials/submit",
     },
   ];
 

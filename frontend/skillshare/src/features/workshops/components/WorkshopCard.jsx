@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import StyledButton from "../../../common/StyledButton";
+
 import {
   Card,
   CardContent,
@@ -180,7 +180,7 @@ export default function WorkshopCard({ workshop }) {
           )}
 
           {isRegistered && workshop.status === "completed" && (
-            <StyledButton
+            <Button
               sx={{
                 background: hasSubmittedFeedback
                   ? "gray"
@@ -194,7 +194,7 @@ export default function WorkshopCard({ workshop }) {
               disabled={hasSubmittedFeedback}
             >
               {hasSubmittedFeedback ? "Feedback Submitted" : "Give Feedback"}
-            </StyledButton>
+            </Button>
           )}
         </CardActions>
       </Card>

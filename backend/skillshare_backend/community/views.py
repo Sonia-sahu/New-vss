@@ -6,7 +6,8 @@ from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
 from .models import Follow
 from django.shortcuts import get_object_or_404
-
+from .models import Tutorial
+from .serializers import TutorialSerializer
 from .serializers import UserExploreSerializer
 from django.contrib.auth.models import User
 from notifications.utils import create_notification
@@ -146,4 +147,31 @@ def get_user_skills(request, user_id):
     """Fetch all skills for a given user"""
     skills = Skill.objects.filter(user_id=user_id)
     serializer = SkillSerializer(skills, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def post_tutorial(request):
+    """Mentor posts a new tutorial"""
+    serializer = TutorialSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(posted_by=request.user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_tutorials(request):
+    """List all tutorials"""
+    tutorials = Tutorial.objects.all().order_by('-created_at')
+    serializer = TutorialSerializer(tutorials, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_tutorials(request, user_id):
+    """List tutorials posted by a specific user"""
+    tutorials = Tutorial.objects.filter(posted_by__id=user_id).order_by('-created_at')
+    serializer = TutorialSerializer(tutorials, many=True)
     return Response(serializer.data)

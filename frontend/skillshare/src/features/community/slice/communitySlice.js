@@ -6,6 +6,9 @@ import {
   toggleFollowUser,
   getFollowers,
   getFollowing,
+  fetchTutorials,
+  postTutorial,
+  fetchUserTutorials,
 } from "../actions/communityActions";
 // 🔹 Load data from localStorage (for persistence)
 const loadFromLocalStorage = (key, fallback = []) => {
@@ -31,12 +34,19 @@ const initialState = {
   users: loadFromLocalStorage("community_users", []), // all users for explore page  followers: [],
   followers: loadFromLocalStorage("community_followers", []), // list of followers
   following: loadFromLocalStorage("community_following", []), // list of users current user follows
+  users: loadFromLocalStorage("community_users", []),
+  followers: loadFromLocalStorage("community_followers", []),
+  following: loadFromLocalStorage("community_following", []),
   user: null,
   skills: [],
+  tutorials: [],
+  userTutorials: [],
   profileStatus: "idle",
   profileError: null,
   skillStatus: "idle",
   skillError: null,
+  tutorialStatus: "idle",
+  tutorialError: null,
   pending: [],
 };
 
@@ -123,6 +133,26 @@ const communitySlice = createSlice({
         saveToLocalStorage("community_following", state.following);
       })
 
+      // ✅ Tutorials
+      .addCase(fetchTutorials.pending, (state) => {
+        state.tutorialStatus = "loading";
+      })
+      .addCase(fetchTutorials.fulfilled, (state, action) => {
+        state.tutorialStatus = "succeeded";
+        state.tutorials = action.payload;
+      })
+      .addCase(fetchTutorials.rejected, (state, action) => {
+        state.tutorialStatus = "failed";
+        state.tutorialError = action.error.message;
+      })
+
+      .addCase(postTutorial.fulfilled, (state, action) => {
+        state.tutorials.unshift(action.payload);
+      })
+
+      .addCase(fetchUserTutorials.fulfilled, (state, action) => {
+        state.userTutorials = action.payload;
+      })
       // ❌ Handle Errors
       .addMatcher(
         (action) => action.type.endsWith("rejected"),

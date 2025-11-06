@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { ZegoUIKitPrebuilt } from "zego-express-react-sdk";
+import { ZegoUIKitPrebuilt } from "@zegocloud/zego-uikit-prebuilt";
 import { useParams, useLocation } from "react-router-dom";
 
 const VideoCall = () => {

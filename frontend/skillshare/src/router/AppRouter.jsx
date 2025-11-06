@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
 import ProtectedRoute from "../components/ProtectedRoute";
 import DashboardLayout from "../layouts/DashboardLayout";
-
+import VideoCall from "../features/messages/components/VideoCalls";
 import HomePage from "../pages/HomePage";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
@@ -96,7 +96,15 @@ export default function AppRouter() {
             </DashboardLayout>
           }
         />
-        <Route path="/video-call/:chatId" element={<ChatRoom />} />
+        <Route
+          path="/video-call/:chatId"
+          element={
+            <DashboardLayout>
+              <VideoCall />
+            </DashboardLayout>
+          }
+        />
+
         <Route
           path="/feedback"
           element={

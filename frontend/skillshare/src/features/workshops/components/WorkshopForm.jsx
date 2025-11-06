@@ -106,12 +106,12 @@ export default function WorkshopForm() {
         mx: "auto",
         mt: 5,
         p: { xs: 2, sm: 3, md: 4 },
-        bgcolor: "#9a9898ff",
-        color: "#1a1a1a",
+        bgcolor: "#151f36ef", // ✅ Dark background
+        color: "#ffffff",
         borderRadius: 2,
       }}
     >
-      <Typography variant="h5" gutterBottom>
+      <Typography variant="h5" gutterBottom sx={{ color: "#ffffff" }}>
         Create New Workshop
       </Typography>
       <Stack spacing={2}>
@@ -121,7 +121,9 @@ export default function WorkshopForm() {
           value={form.id}
           onChange={handleChange}
           fullWidth
-          sx={{ backgroundColor: "#f9fafb", borderRadius: 1 }}
+          InputLabelProps={{ style: { color: "#f9fafb" } }}
+          InputProps={{ style: { color: "#f9fafb" } }}
+          sx={{ borderRadius: 1 }}
         />
         <TextField
           label="Title"
@@ -129,7 +131,9 @@ export default function WorkshopForm() {
           value={form.title}
           onChange={handleChange}
           fullWidth
-          sx={{ backgroundColor: "#f9fafb", borderRadius: 1 }}
+          InputLabelProps={{ style: { color: "#f9fafb" } }}
+          InputProps={{ style: { color: "#f9fafb" } }}
+          sx={{ borderRadius: 1 }}
         />
         <TextField
           label="Description"
@@ -139,7 +143,9 @@ export default function WorkshopForm() {
           multiline
           rows={3}
           fullWidth
-          sx={{ backgroundColor: "#f9fafb", borderRadius: 1 }}
+          InputLabelProps={{ style: { color: "#f9fafb" } }}
+          InputProps={{ style: { color: "#f9fafb" } }}
+          sx={{ borderRadius: 1 }}
         />
         <TextField
           select
@@ -150,13 +156,15 @@ export default function WorkshopForm() {
           fullWidth
           disabled={loading}
           helperText={loading ? "Loading skills..." : "Select a skill"}
-          sx={{ backgroundColor: "#f9fafb", borderRadius: 1 }}
+          InputLabelProps={{ style: { color: "#f9fafb" } }}
+          InputProps={{ style: { color: "#f9fafb" } }}
+          sx={{ borderRadius: 1 }}
         >
           <MenuItem value="" disabled>
             -- Select a skill --
           </MenuItem>
           {skills.map((skill) => (
-            <MenuItem key={skill.id} value={skill.id}>
+            <MenuItem sx={{ color: "#fff" }} key={skill.id} value={skill.id}>
               {skill.name || skill.title || `Skill ${skill.id}`}
             </MenuItem>
           ))}
@@ -172,7 +180,9 @@ export default function WorkshopForm() {
             <TextField
               {...params}
               fullWidth
-              sx={{ backgroundColor: "#f9fafb", borderRadius: 1 }}
+              InputLabelProps={{ style: { color: "#ffffff" } }}
+              InputProps={{ style: { color: "#ffffff" } }}
+              sx={{ borderRadius: 1 }}
             />
           )}
         />
@@ -183,7 +193,9 @@ export default function WorkshopForm() {
           value={form.duration_minutes}
           onChange={handleChange}
           fullWidth
-          sx={{ backgroundColor: "#f9fafb", borderRadius: 1 }}
+          InputLabelProps={{ style: { color: "#f9fafb" } }}
+          InputProps={{ style: { color: "#f9fafb" } }}
+          sx={{ borderRadius: 1 }}
         />
         <TextField
           select
@@ -192,7 +204,9 @@ export default function WorkshopForm() {
           value={form.status}
           onChange={handleChange}
           fullWidth
-          sx={{ backgroundColor: "#f9fafb", borderRadius: 1 }}
+          InputLabelProps={{ style: { color: "#f9fafb" } }}
+          InputProps={{ style: { color: "#f9fafb" } }}
+          sx={{ borderRadius: 1 }}
         >
           {["upcoming", "completed", "cancelled"].map((status) => (
             <MenuItem key={status} value={status}>
@@ -206,7 +220,9 @@ export default function WorkshopForm() {
           value={form.host_id}
           onChange={handleChange}
           fullWidth
-          sx={{ backgroundColor: "#f9fafb", borderRadius: 1 }}
+          InputLabelProps={{ style: { color: "#f9fafb" } }}
+          InputProps={{ style: { color: "#f9fafb" } }}
+          sx={{ borderRadius: 1 }}
         />
         <TextField
           label="Created At"
@@ -214,9 +230,10 @@ export default function WorkshopForm() {
           type="date"
           value={form.created_at}
           onChange={handleChange}
-          InputLabelProps={{ shrink: true }}
           fullWidth
-          sx={{ backgroundColor: "#f9fafb", borderRadius: 1 }}
+          InputLabelProps={{ style: { color: "#f9fafb", shrink: true } }}
+          InputProps={{ style: { color: "#f9fafb" } }}
+          sx={{ borderRadius: 1 }}
         />
 
         <FormControlLabel
@@ -239,7 +256,9 @@ export default function WorkshopForm() {
               onChange={handleChange}
               fullWidth
               helperText="This will be used to identify the meeting room"
-              sx={{ backgroundColor: "#f9fafb", borderRadius: 1 }}
+              InputLabelProps={{ style: { color: "#f9fafb" } }}
+              InputProps={{ style: { color: "#f9fafb" } }}
+              sx={{ borderRadius: 1 }}
             />
             <TextField
               label="Meeting URL"
@@ -248,7 +267,9 @@ export default function WorkshopForm() {
               onChange={handleChange}
               fullWidth
               helperText="Full URL to the Jitsi meeting"
-              sx={{ backgroundColor: "#f9fafb", borderRadius: 1 }}
+              InputLabelProps={{ style: { color: "#f9fafb" } }}
+              InputProps={{ style: { color: "#f9fafb" } }}
+              sx={{ borderRadius: 1 }}
             />
           </>
         )}

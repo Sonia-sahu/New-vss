@@ -1,8 +1,7 @@
 from rest_framework import serializers
 from users.models import User
 from skills.models import Skill
-from .models import Follow
-
+from .models import Follow, Tutorial
 class UserExploreSerializer(serializers.ModelSerializer):
     skills = serializers.StringRelatedField(many=True)
     is_following = serializers.SerializerMethodField()
@@ -26,3 +25,10 @@ class FollowSerializer(serializers.ModelSerializer):
         model = Follow
         fields = ['id', 'follower', 'follower_username', 'following', 'following_username', 'followed_at']
         read_only_fields = ['id', 'followed_at', 'follower_username', 'following_username']
+class TutorialSerializer(serializers.ModelSerializer):
+    posted_by_username = serializers.ReadOnlyField(source='posted_by.username')
+
+    class Meta:
+        model = Tutorial
+        fields = ['id', 'title', 'description', 'video_url', 'thumbnail_url', 'posted_by', 'posted_by_username', 'created_at']
+        read_only_fields = ['id', 'posted_by', 'posted_by_username', 'created_at']

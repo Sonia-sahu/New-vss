@@ -1,9 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchProfileAction,
-  fetchSkillAction,
-} from "../features/community/actions/communityActions";
+import { fetchSkillAction } from "../features/community/actions/communityActions";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -12,22 +9,24 @@ import {
   CircularProgress,
   IconButton,
   Grid,
-  Paper,
 } from "@mui/material";
-import { Edit } from "@mui/icons-material";
+import { fetchSkills } from "../features/skills/actions/skillActions";
 import SkillList from "../features/skills/components/SkillList";
+import { fetchProfile } from "../features/auth/actions/authActions";
+import EditIcon from "@mui/icons-material/Edit";
 
 export default function PrivateProfilePage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { user, skills, profileStatus, profileError, skillStatus } =
-    useSelector((state) => state.community);
+  const { profileStatus, profileError } = useSelector(
+    (state) => state.community
+  );
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    const loggedInUserId = 3; // Replace with actual auth user ID
-    dispatch(fetchProfileAction(loggedInUserId));
-    dispatch(fetchSkillAction(loggedInUserId));
+    dispatch(fetchProfile(user));
+    dispatch(fetchSkills(user));
   }, [dispatch]);
 
   if (profileStatus === "loading") {
@@ -38,6 +37,7 @@ export default function PrivateProfilePage() {
           justifyContent: "center",
           alignItems: "center",
           minHeight: "80vh",
+          backgroundColor: "#2c3e65",
         }}
       >
         <CircularProgress />
@@ -68,18 +68,17 @@ export default function PrivateProfilePage() {
         justifyContent: "center",
         px: 2,
         py: 5,
-        bgcolor: "#f9fafb",
+        backgroundColor: "#2c3e65",
         minHeight: "100vh",
       }}
     >
-      <Paper
-        elevation={4}
+      <Box
         sx={{
           width: "100%",
-          maxWidth: 800,
+          maxWidth: 1000,
           borderRadius: 4,
           p: { xs: 3, sm: 5 },
-          bgcolor: "white",
+          backgroundColor: "#2c3e65",
         }}
       >
         {/* Header */}
@@ -113,33 +112,28 @@ export default function PrivateProfilePage() {
             </Box>
           </Box>
           <IconButton color="primary" onClick={() => navigate("/profile")}>
-            <Edit fontSize="medium" />
+            <EditIcon />
           </IconButton>
         </Box>
 
         {/* Bio */}
-        <Box sx={{ mb: 4 }}>
-          <Typography variant="subtitle1" fontWeight={600}>
-            About
-          </Typography>
-          <Typography color="text.secondary" sx={{ mt: 1 }}>
-            {user.bio || "You haven’t added a bio yet."}
-          </Typography>
-        </Box>
+        <Typography variant="subtitle1" fontWeight={600}>
+          About
+        </Typography>
+        <Typography color="text.secondary" sx={{ mt: 1, mb: 4 }}>
+          {user.bio || "You haven’t added a bio yet."}
+        </Typography>
 
         {/* Skills */}
-        <Box sx={{ mb: 4 }}>
-          <Typography variant="subtitle1" fontWeight={600} mb={1}>
-            Your Skills
-          </Typography>
-          <SkillList userId={user.id} />
-        </Box>
+        <Typography variant="subtitle1" fontWeight={600} mb={1}>
+          Your Skills
+        </Typography>
+        <SkillList userId={user.id} />
 
         {/* Followers / Following */}
-        <Grid container spacing={2}>
+        <Grid container spacing={2} mt={4}>
           <Grid item xs={6}>
-            <Paper
-              elevation={2}
+            <Box
               sx={{
                 py: 3,
                 textAlign: "center",
@@ -151,11 +145,10 @@ export default function PrivateProfilePage() {
                 {user.followers?.length || 0}
               </Typography>
               <Typography color="text.secondary">Followers</Typography>
-            </Paper>
+            </Box>
           </Grid>
           <Grid item xs={6}>
-            <Paper
-              elevation={2}
+            <Box
               sx={{
                 py: 3,
                 textAlign: "center",
@@ -167,10 +160,10 @@ export default function PrivateProfilePage() {
                 {user.following?.length || 0}
               </Typography>
               <Typography color="text.secondary">Following</Typography>
-            </Paper>
+            </Box>
           </Grid>
         </Grid>
-      </Paper>
+      </Box>
     </Box>
   );
 }

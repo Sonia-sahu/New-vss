@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { fetchSkills, deleteSkill, updateSkill } from "../actions/skillActions";
 import {
   Table,
@@ -18,6 +20,7 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
+  IconButton,
 } from "@mui/material";
 
 export default function SkillList({ userId: propUserId }) {
@@ -115,10 +118,20 @@ export default function SkillList({ userId: propUserId }) {
                 <TableCell>{skill.category}</TableCell>
                 <TableCell>{skill.status}</TableCell>
                 <TableCell>
-                  <Button onClick={() => handleEditClick(skill)}>Edit</Button>
-                  <Button onClick={() => handleDeleteClick(skill.id)}>
-                    Delete
-                  </Button>
+                  <IconButton
+                    size="small"
+                    color="primary"
+                    onClick={() => handleEditClick(skill)}
+                  >
+                    <EditIcon fontSize="small" />
+                  </IconButton>
+                  <IconButton
+                    size="small"
+                    color="error"
+                    onClick={() => handleDeleteClick(skill.id)}
+                  >
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}

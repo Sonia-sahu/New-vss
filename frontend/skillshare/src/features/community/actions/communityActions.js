@@ -107,3 +107,49 @@ export const fetchProfileAction = createAsyncThunk(
     }
   }
 );
+
+// 🔹 Fetch all tutorials
+export const fetchTutorials = createAsyncThunk(
+  "community/fetchTutorials",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await API.get("/community/tutorials/");
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || "Failed to load tutorials"
+      );
+    }
+  }
+);
+
+// 🔹 Post a new tutorial (mentor only)
+export const postTutorial = createAsyncThunk(
+  "community/postTutorial",
+  async (tutorialData, { rejectWithValue }) => {
+    try {
+      const response = await API.post(
+        "/community/tutorials/post/",
+        tutorialData
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to post tutorial");
+    }
+  }
+);
+
+// 🔹 Fetch tutorials by a specific user
+export const fetchUserTutorials = createAsyncThunk(
+  "community/fetchUserTutorials",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await API.get(`/community/tutorials/user/${userId}/`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || "Failed to load user tutorials"
+      );
+    }
+  }
+);

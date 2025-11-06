@@ -13,25 +13,33 @@ import {
   Button,
 } from "@mui/material";
 import SkillList from "../features/skills/components/SkillList"; // Assuming you have SkillList component
+import { fetchProfile } from "../features/auth/actions/authActions";
+import { fetchSkills } from "../features/skills/actions/skillActions";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function PublicProfilePage() {
   const { id } = useParams();
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [skills, setSkills] = useState([]);
+
   const [isFollowing, setIsFollowing] = useState(false);
+
+  const { user } = useSelector((state) => state.auth);
+  const { skills } = useSelector((state) => state.skills);
+
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchSkills(id));
+    }
+  }, [dispatch, id]);
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const res = await API.get(`/community/profile/${id}/`);
         setProfile(res.data);
-
-        // Fetch user skills
-        const skillRes = await API.get(`/skills/user/${id}/`);
-        setSkills(skillRes.data || []);
 
         // Check follow status
         const followRes = await API.get(`/community/is-following/${id}/`);
