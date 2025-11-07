@@ -28,12 +28,12 @@ export default function DashboardPage() {
       icon: <Group fontSize="large" color="primary" />,
       path: "/community",
     },
-    {
-      title: "Messages",
-      description: "Chat with your connections.",
-      icon: <Chat fontSize="large" color="primary" />,
-      path: "/messages",
-    },
+    // {
+    //   title: "Messages",
+    //   description: "Chat with your connections.",
+    //   icon: <Chat fontSize="large" color="primary" />,
+    //   path: "/messages",
+    // },
     {
       title: "Workshops",
       description: "Host or attend skill-sharing sessions.",

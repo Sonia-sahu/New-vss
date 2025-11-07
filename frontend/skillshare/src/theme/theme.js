@@ -75,6 +75,25 @@ export const getTheme = () =>
           },
         ],
       },
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            // Applies to all Paper components including pickers
+            backgroundColor: "#1e1e1e",
+            color: "#ffffff",
+          },
+        },
+      },
+      MuiPickersPopper: {
+        styleOverrides: {
+          root: {
+            "& .MuiPaper-root": {
+              backgroundColor: "#1e1e1e",
+              color: "#ffffff",
+            },
+          },
+        },
+      },
 
       MuiTextField: {
         styleOverrides: {
@@ -114,6 +133,13 @@ export const getTheme = () =>
           sx: {
             fontFamily: "'Inter', sans-serif",
             color: "#f3f4f6",
+          },
+        },
+      },
+      MuiSvgIcon: {
+        styleOverrides: {
+          root: {
+            color: "#f3f4f6", // ✅ Bright light color for icons
           },
         },
       },

@@ -135,31 +135,64 @@ export default function PrivateProfilePage() {
           <Grid item xs={6}>
             <Box
               sx={{
-                py: 3,
-                textAlign: "center",
-                borderRadius: 3,
-                bgcolor: "#f5f7fa",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                px: 3,
+                py: 1.5,
+                borderRadius: 50,
+                bgcolor: "#1e1e1e", // ✅ Dark background
+                color: "#ffffff",
               }}
             >
-              <Typography variant="h6" fontWeight="bold" color="primary.main">
-                {user.followers?.length || 0}
+              <Typography variant="body1" fontWeight="bold" sx={{ mr: 1 }}>
+                Followers
               </Typography>
-              <Typography color="text.secondary">Followers</Typography>
+              <Box
+                sx={{
+                  px: 1.5,
+                  py: 0.5,
+                  borderRadius: 2,
+                  bgcolor: "primary.main",
+                  color: "#fff",
+                  fontWeight: "bold",
+                  fontSize: "0.875rem",
+                }}
+              >
+                {user.followers?.length || 0}
+              </Box>
             </Box>
           </Grid>
+
           <Grid item xs={6}>
             <Box
               sx={{
-                py: 3,
-                textAlign: "center",
-                borderRadius: 3,
-                bgcolor: "#f5f7fa",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                px: 3,
+                py: 1.5,
+                borderRadius: 50,
+                bgcolor: "#1e1e1e",
+                color: "#ffffff",
               }}
             >
-              <Typography variant="h6" fontWeight="bold" color="primary.main">
-                {user.following?.length || 0}
+              <Typography variant="body1" fontWeight="bold" sx={{ mr: 1 }}>
+                Following
               </Typography>
-              <Typography color="text.secondary">Following</Typography>
+              <Box
+                sx={{
+                  px: 1.5,
+                  py: 0.5,
+                  borderRadius: 2,
+                  bgcolor: "primary.main",
+                  color: "#fff",
+                  fontWeight: "bold",
+                  fontSize: "0.875rem",
+                }}
+              >
+                {user.following?.length || 0}
+              </Box>
             </Box>
           </Grid>
         </Grid>

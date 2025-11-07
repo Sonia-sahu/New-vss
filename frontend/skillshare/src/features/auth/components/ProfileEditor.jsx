@@ -74,7 +74,7 @@ export default function ProfileEditor() {
   };
 
   return (
-    <Box sx={{ maxWidth: 600, mx: "auto", mt: 4 }}>
+    <Box sx={{ width: 600, mx: "auto", mt: 4 }}>
       <Typography variant="h5" gutterBottom>
         Edit Profile
       </Typography>

@@ -102,16 +102,14 @@ export default function WorkshopForm() {
       elevation={3}
       sx={{
         width: "100%",
-        maxWidth: 800,
+        maxWidth: 1000, // ✅ Increased width
         mx: "auto",
         mt: 5,
-        p: { xs: 2, sm: 3, md: 4 },
-        bgcolor: "#151f36ef", // ✅ Dark background
-        color: "#ffffff",
+        p: 4,
         borderRadius: 2,
       }}
     >
-      <Typography variant="h5" gutterBottom sx={{ color: "#ffffff" }}>
+      <Typography variant="h5" gutterBottom>
         Create New Workshop
       </Typography>
       <Stack spacing={2}>
@@ -121,9 +119,6 @@ export default function WorkshopForm() {
           value={form.id}
           onChange={handleChange}
           fullWidth
-          InputLabelProps={{ style: { color: "#f9fafb" } }}
-          InputProps={{ style: { color: "#f9fafb" } }}
-          sx={{ borderRadius: 1 }}
         />
         <TextField
           label="Title"
@@ -131,9 +126,6 @@ export default function WorkshopForm() {
           value={form.title}
           onChange={handleChange}
           fullWidth
-          InputLabelProps={{ style: { color: "#f9fafb" } }}
-          InputProps={{ style: { color: "#f9fafb" } }}
-          sx={{ borderRadius: 1 }}
         />
         <TextField
           label="Description"
@@ -143,9 +135,6 @@ export default function WorkshopForm() {
           multiline
           rows={3}
           fullWidth
-          InputLabelProps={{ style: { color: "#f9fafb" } }}
-          InputProps={{ style: { color: "#f9fafb" } }}
-          sx={{ borderRadius: 1 }}
         />
         <TextField
           select
@@ -156,15 +145,22 @@ export default function WorkshopForm() {
           fullWidth
           disabled={loading}
           helperText={loading ? "Loading skills..." : "Select a skill"}
-          InputLabelProps={{ style: { color: "#f9fafb" } }}
-          InputProps={{ style: { color: "#f9fafb" } }}
-          sx={{ borderRadius: 1 }}
+          SelectProps={{
+            MenuProps: {
+              PaperProps: {
+                sx: {
+                  bgcolor: "#1e1e1e",
+                  color: "#ffffff",
+                },
+              },
+            },
+          }}
         >
           <MenuItem value="" disabled>
             -- Select a skill --
           </MenuItem>
           {skills.map((skill) => (
-            <MenuItem sx={{ color: "#fff" }} key={skill.id} value={skill.id}>
+            <MenuItem key={skill.id} value={skill.id}>
               {skill.name || skill.title || `Skill ${skill.id}`}
             </MenuItem>
           ))}
@@ -176,15 +172,21 @@ export default function WorkshopForm() {
           ampm
           minutesStep={5}
           disablePast
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              fullWidth
-              InputLabelProps={{ style: { color: "#ffffff" } }}
-              InputProps={{ style: { color: "#ffffff" } }}
-              sx={{ borderRadius: 1 }}
-            />
-          )}
+          renderInput={(params) => <TextField {...params} fullWidth />}
+          PopperProps={{
+            sx: {
+              "& .MuiPaper-root": {
+                backgroundColor: "#1e1e1e",
+                color: "#ffffff",
+              },
+              "& .MuiPickersDay-root": {
+                color: "#ffffff",
+              },
+              "& .MuiTypography-root": {
+                color: "#ffffff",
+              },
+            },
+          }}
         />
         <TextField
           label="Duration (minutes)"
@@ -193,9 +195,6 @@ export default function WorkshopForm() {
           value={form.duration_minutes}
           onChange={handleChange}
           fullWidth
-          InputLabelProps={{ style: { color: "#f9fafb" } }}
-          InputProps={{ style: { color: "#f9fafb" } }}
-          sx={{ borderRadius: 1 }}
         />
         <TextField
           select
@@ -204,9 +203,6 @@ export default function WorkshopForm() {
           value={form.status}
           onChange={handleChange}
           fullWidth
-          InputLabelProps={{ style: { color: "#f9fafb" } }}
-          InputProps={{ style: { color: "#f9fafb" } }}
-          sx={{ borderRadius: 1 }}
         >
           {["upcoming", "completed", "cancelled"].map((status) => (
             <MenuItem key={status} value={status}>
@@ -220,9 +216,6 @@ export default function WorkshopForm() {
           value={form.host_id}
           onChange={handleChange}
           fullWidth
-          InputLabelProps={{ style: { color: "#f9fafb" } }}
-          InputProps={{ style: { color: "#f9fafb" } }}
-          sx={{ borderRadius: 1 }}
         />
         <TextField
           label="Created At"
@@ -231,11 +224,8 @@ export default function WorkshopForm() {
           value={form.created_at}
           onChange={handleChange}
           fullWidth
-          InputLabelProps={{ style: { color: "#f9fafb", shrink: true } }}
-          InputProps={{ style: { color: "#f9fafb" } }}
-          sx={{ borderRadius: 1 }}
+          InputLabelProps={{ shrink: true }}
         />
-
         <FormControlLabel
           control={
             <Switch
@@ -246,7 +236,6 @@ export default function WorkshopForm() {
           }
           label="Enable Live Session"
         />
-
         {form.enable_live_session && (
           <>
             <TextField
@@ -256,9 +245,6 @@ export default function WorkshopForm() {
               onChange={handleChange}
               fullWidth
               helperText="This will be used to identify the meeting room"
-              InputLabelProps={{ style: { color: "#f9fafb" } }}
-              InputProps={{ style: { color: "#f9fafb" } }}
-              sx={{ borderRadius: 1 }}
             />
             <TextField
               label="Meeting URL"
@@ -267,13 +253,9 @@ export default function WorkshopForm() {
               onChange={handleChange}
               fullWidth
               helperText="Full URL to the Jitsi meeting"
-              InputLabelProps={{ style: { color: "#f9fafb" } }}
-              InputProps={{ style: { color: "#f9fafb" } }}
-              sx={{ borderRadius: 1 }}
             />
           </>
         )}
-
         <Button variant="contained" onClick={handleSubmit} fullWidth>
           Create Workshop
         </Button>

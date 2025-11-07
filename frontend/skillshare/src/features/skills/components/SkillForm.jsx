@@ -4,7 +4,7 @@ import { createSkill } from "../actions/skillActions";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
-  Grid,
+  Stack,
   TextField,
   Select,
   MenuItem,
@@ -60,6 +60,7 @@ function SkillForm() {
       sx={{
         p: 6,
         maxWidth: 800,
+        width: "100%",
         mx: "auto",
         my: 8,
         borderRadius: 4,
@@ -85,126 +86,115 @@ function SkillForm() {
         <Divider sx={{ my: 3 }} />
       </Box>
       <Box component="form" onSubmit={handleSubmit}>
-        <Grid container spacing={4}>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Skill Title"
-              variant="outlined"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Title color="action" />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Skill Description"
-              variant="outlined"
-              multiline
-              rows={5}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              required
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Description color="action" />
-                  </InputAdornment>
-                ),
-              }}
-              placeholder="Describe your skill in detail (minimum 50 characters)"
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <FormControl fullWidth required>
-              <InputLabel>Skill Category</InputLabel>
-              <Select
-                value={category}
-                label="Skill Category"
-                onChange={(e) => setCategory(e.target.value)}
-                variant="outlined"
-                startAdornment={
-                  <InputAdornment position="start">
-                    <Category color="action" />
-                  </InputAdornment>
-                }
-              >
-                <MenuItem value="" disabled>
-                  Select a category
-                </MenuItem>
-                <MenuItem value="tech">Technology</MenuItem>
-                <MenuItem value="art">Art & Design</MenuItem>
-                <MenuItem value="cooking">Culinary Arts</MenuItem>
-                <MenuItem value="music">Music & Audio</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12}>
-            <Button
-              variant="outlined"
-              component="label"
-              fullWidth
-              sx={{
-                py: 2,
-                borderStyle: "dashed",
-                borderWidth: 2,
-                "&:hover": { borderWidth: 2 },
-              }}
-              startIcon={<Upload />}
+        <Stack spacing={3}>
+          <TextField
+            fullWidth
+            label="Skill Title"
+            variant="outlined"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Title color="action" />
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <TextField
+            fullWidth
+            label="Skill Description"
+            variant="outlined"
+            multiline
+            rows={5}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            required
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Description color="action" />
+                </InputAdornment>
+              ),
+            }}
+            placeholder="Describe your skill in detail (minimum 50 characters)"
+          />
+
+          <FormControl fullWidth required>
+            <InputLabel id="category-label">Skill Category</InputLabel>
+            <Select
+              labelId="category-label"
+              value={category}
+              label="Skill Category"
+              onChange={(e) => setCategory(e.target.value)}
             >
-              {fileName || "Upload Certification (PDF only)"}
-              <input
-                type="file"
-                accept=".pdf"
-                hidden
-                onChange={handleCertificationChange}
-                required
-              />
-            </Button>
-            <FormHelperText sx={{ mt: 1, textAlign: "center" }}>
-              Maximum file size: 5MB • Accepted format: PDF
-            </FormHelperText>
-          </Grid>
+              <MenuItem value="" disabled>
+                Select a category
+              </MenuItem>
+              <MenuItem value="tech">Technology</MenuItem>
+              <MenuItem value="art">Art & Design</MenuItem>
+              <MenuItem value="cooking">Culinary Arts</MenuItem>
+              <MenuItem value="music">Music & Audio</MenuItem>
+            </Select>
+          </FormControl>
+
+          <Button
+            variant="outlined"
+            component="label"
+            fullWidth
+            sx={{
+              py: 2,
+              borderStyle: "dashed",
+              borderWidth: 2,
+              "&:hover": { borderWidth: 2 },
+            }}
+            startIcon={<Upload />}
+          >
+            {fileName || "Upload Certification (PDF only)"}
+            <input
+              type="file"
+              accept=".pdf"
+              hidden
+              onChange={handleCertificationChange}
+              required
+            />
+          </Button>
+
+          <FormHelperText sx={{ textAlign: "center" }}>
+            Maximum file size: 5MB • Accepted format: PDF
+          </FormHelperText>
+
           {error && (
-            <Grid item xs={12}>
-              <Typography
-                color="error"
-                align="center"
-                sx={{
-                  bgcolor: "error.light",
-                  py: 1,
-                  borderRadius: 1,
-                }}
-              >
-                ⚠️ {error}
-              </Typography>
-            </Grid>
-          )}
-          <Grid item xs={12} sx={{ mt: 4 }}>
-            <Button
-              type="submit"
-              variant="contained"
-              fullWidth
-              size="large"
+            <Typography
+              color="error"
+              align="center"
               sx={{
-                py: 2,
-                fontWeight: 700,
-                fontSize: "1.1rem",
-                "&:hover": { transform: "translateY(-2px)" },
+                bgcolor: "error.light",
+                py: 1,
+                borderRadius: 1,
               }}
             >
-              Submit for Verification
-            </Button>
-          </Grid>
-        </Grid>
+              ⚠️ {error}
+            </Typography>
+          )}
+
+          <Button
+            type="submit"
+            variant="contained"
+            fullWidth
+            size="large"
+            sx={{
+              py: 2,
+              fontWeight: 700,
+              fontSize: "1.1rem",
+              "&:hover": { transform: "translateY(-2px)" },
+            }}
+          >
+            Submit for Verification
+          </Button>
+        </Stack>
       </Box>
     </Paper>
   );

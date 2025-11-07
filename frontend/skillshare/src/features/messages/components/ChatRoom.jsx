@@ -28,7 +28,7 @@ const ChatRoom = () => {
           navigate(`/video-call/${chatId}`, { state: { username } })
         }
       >
-        Video Call
+        Connect
       </Button>
       <MessageThread chatPartner={{ username }} />
     </Box>

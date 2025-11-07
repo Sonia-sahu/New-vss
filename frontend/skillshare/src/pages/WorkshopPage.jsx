@@ -12,7 +12,7 @@ export default function WorkshopPage() {
       </Typography>
 
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <Box sx={{ maxWidth: 800, mx: "auto" }}>
+        <Box sx={{ width: 600, mx: "auto" }}>
           <WorkshopForm />
         </Box>
       </LocalizationProvider>
