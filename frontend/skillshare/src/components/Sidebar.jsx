@@ -34,8 +34,18 @@ const navItems = [
 export default function Sidebar({ open, toggleSidebar }) {
   return (
     <>
-      <Drawer variant="persistent" anchor="left" open={open}>
-        <Box sx={{ width: 240 }}>
+      <Drawer
+        variant="persistent"
+        anchor="left"
+        open={open}
+        PaperProps={{
+          sx: {
+            bgcolor: "#1f3b73",
+            width: 240,
+          },
+        }}
+      >
+        <Box>
           <IconButton onClick={toggleSidebar} sx={{ m: 1 }}>
             <CloseIcon />
           </IconButton>

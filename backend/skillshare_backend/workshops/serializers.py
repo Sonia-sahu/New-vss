@@ -1,14 +1,19 @@
 from rest_framework import serializers
 from .models import Workshop, WorkshopRegistration
-
+from skills.models import Skill
 class WorkshopSerializer(serializers.ModelSerializer):
     host_username = serializers.ReadOnlyField(source='host.username')
+    skill_id = serializers.PrimaryKeyRelatedField(
+        queryset=Skill.objects.all(),
+        source='skill',
+        write_only=True
+    )
 
     class Meta:
         model = Workshop
         fields = [
             'id', 'host', 'host_username', 'title', 'description',
-            'skill', 'date', 'duration_minutes', 'status', 'created_at',
+            'skill','skill_id','date', 'duration_minutes', 'status', 'created_at',
             'enable_live_session', 'meeting_room_name', 'meeting_url'
         ]
         read_only_fields = ['id', 'host', 'created_at', 'host_username']

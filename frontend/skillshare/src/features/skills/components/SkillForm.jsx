@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createSkill } from "../actions/skillActions";
 import { useNavigate } from "react-router-dom";
+import { validateForm } from "../../../utils/validateForm";
 import {
   Box,
   Stack,
@@ -18,46 +19,69 @@ import {
   InputAdornment,
 } from "@mui/material";
 import { Description, Title, Category, Upload } from "@mui/icons-material";
+
 function SkillForm() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [certification, setCertification] = useState(null);
-  const [error, setError] = useState("");
   const [fileName, setFileName] = useState("");
+  const [errors, setErrors] = useState({});
+
   const handleCertificationChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type === "application/pdf") {
       setCertification(file);
       setFileName(file.name);
-      setError("");
+      setErrors((prev) => ({ ...prev, certification: "" }));
     } else {
-      setError("Only PDF files are allowed.");
       setCertification(null);
       setFileName("");
+      setErrors((prev) => ({
+        ...prev,
+        certification: "Only PDF files are allowed.",
+      }));
     }
   };
-  const navigate = useNavigate();
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const requiredFields = { title, description, category };
+    const { isValid, errors: validationErrors } = validateForm(requiredFields, [
+      "title",
+      "description",
+      "category",
+    ]);
+
     if (!certification) {
-      setError("Certification is mandatory.");
+      validationErrors.certification = "Certification is mandatory.";
+    }
+
+    if (!isValid || validationErrors.certification) {
+      setErrors(validationErrors);
       return;
     }
+
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
     formData.append("category", category);
     formData.append("certification", certification);
     formData.append("status", "in review");
+
     dispatch(createSkill(formData));
     navigate("/private-profile");
   };
+
   return (
     <Paper
       elevation={6}
       sx={{
+        backgroundColor: "#aba7a7ff",
         p: 6,
         maxWidth: 800,
         width: "100%",
@@ -85,6 +109,7 @@ function SkillForm() {
         </Typography>
         <Divider sx={{ my: 3 }} />
       </Box>
+
       <Box component="form" onSubmit={handleSubmit}>
         <Stack spacing={3}>
           <TextField
@@ -92,8 +117,12 @@ function SkillForm() {
             label="Skill Title"
             variant="outlined"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
+            onChange={(e) => {
+              setTitle(e.target.value);
+              setErrors((prev) => ({ ...prev, title: "" }));
+            }}
+            error={!!errors.title}
+            helperText={errors.title}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -110,8 +139,12 @@ function SkillForm() {
             multiline
             rows={5}
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
+            onChange={(e) => {
+              setDescription(e.target.value);
+              setErrors((prev) => ({ ...prev, description: "" }));
+            }}
+            error={!!errors.description}
+            helperText={errors.description}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -122,13 +155,16 @@ function SkillForm() {
             placeholder="Describe your skill in detail (minimum 50 characters)"
           />
 
-          <FormControl fullWidth required>
+          <FormControl fullWidth required error={!!errors.category}>
             <InputLabel id="category-label">Skill Category</InputLabel>
             <Select
               labelId="category-label"
               value={category}
               label="Skill Category"
-              onChange={(e) => setCategory(e.target.value)}
+              onChange={(e) => {
+                setCategory(e.target.value);
+                setErrors((prev) => ({ ...prev, category: "" }));
+              }}
             >
               <MenuItem value="" disabled>
                 Select a category
@@ -138,6 +174,9 @@ function SkillForm() {
               <MenuItem value="cooking">Culinary Arts</MenuItem>
               <MenuItem value="music">Music & Audio</MenuItem>
             </Select>
+            {errors.category && (
+              <FormHelperText>{errors.category}</FormHelperText>
+            )}
           </FormControl>
 
           <Button
@@ -158,7 +197,6 @@ function SkillForm() {
               accept=".pdf"
               hidden
               onChange={handleCertificationChange}
-              required
             />
           </Button>
 
@@ -166,7 +204,7 @@ function SkillForm() {
             Maximum file size: 5MB • Accepted format: PDF
           </FormHelperText>
 
-          {error && (
+          {errors.certification && (
             <Typography
               color="error"
               align="center"
@@ -176,7 +214,7 @@ function SkillForm() {
                 borderRadius: 1,
               }}
             >
-              ⚠️ {error}
+              ⚠️ {errors.certification}
             </Typography>
           )}
 
@@ -199,4 +237,5 @@ function SkillForm() {
     </Paper>
   );
 }
+
 export default SkillForm;

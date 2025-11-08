@@ -8,6 +8,7 @@ import {
   updateSkillStatus,
   fetchCategories,
   fetchAllSkills,
+  getAnalytics,
 } from "../actions/skillActions";
 
 const initialState = {
@@ -15,6 +16,7 @@ const initialState = {
   analytics: {},
   status: "idle", // Track the global status of API calls
   error: null,
+  data: null,
   createSkillStatus: "idle", // Track the status of the create skill API call
   updateSkillStatus: "idle", // Track the status of the update skill API call
   deleteSkillStatus: "idle", // Track the status of the delete skill API call
@@ -128,6 +130,19 @@ const skillSlice = createSlice({
       .addCase(fetchAllSkills.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+      })
+
+      .addCase(getAnalytics.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAnalytics.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+      })
+      .addCase(getAnalytics.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });

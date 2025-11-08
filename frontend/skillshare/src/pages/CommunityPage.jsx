@@ -7,12 +7,14 @@ import SearchBar from "../features/community/components/SearchBar";
 import TutorialFeed from "../features/community/components/TutorialFeed";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import { IconButton } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { fetchTutorials } from "../features/community/actions/communityActions";
 import { useNavigate } from "react-router-dom";
 export default function CommunityPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   useEffect(() => {
     dispatch(fetchTutorials()); // ✅ Load tutorials on page load
   }, [dispatch]);
@@ -21,6 +23,9 @@ export default function CommunityPage() {
   return (
     <Container>
       <Typography variant="h5" gutterBottom>
+        <IconButton onClick={() => navigate(-1)}>
+          <ArrowBackIcon />
+        </IconButton>
         Explore Community
       </Typography>
       <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />

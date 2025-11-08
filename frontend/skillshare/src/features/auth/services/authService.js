@@ -83,6 +83,21 @@ const getSettings = async () => {
   const response = await API.get("/users/settings/", { headers });
   return response.data;
 };
+// Forgot Password: Send reset link
+export const sendResetLinkService = async (email) => {
+  const response = await API.post("/forgot-password/", { email });
+  return response.data;
+};
+
+// Reset Password: Submit new password
+export const resetPasswordService = async ({ uid, token, newPassword }) => {
+  const response = await API.post("/reset-password/", {
+    uid,
+    token,
+    new_password: newPassword,
+  });
+  return response.data;
+};
 
 const authService = {
   register,

@@ -5,12 +5,18 @@ import {
   Typography,
   CircularProgress,
   Link,
+  useMediaQuery,
+  useTheme,
+  IconButton,
+  InputAdornment,
 } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { registerUser } from "../actions/authActions";
 import { motion } from "framer-motion";
+import { validateRegistrationForm } from "../../../utils/validateForm";
 
 export default function RegisterForm() {
   const dispatch = useDispatch();
@@ -23,6 +29,12 @@ export default function RegisterForm() {
     password: "",
   });
 
+  const [formErrors, setFormErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -30,6 +42,14 @@ export default function RegisterForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const resultAction = await dispatch(registerUser(form));
+
+    const errors = validateRegistrationForm(form);
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+
+    setFormErrors({});
 
     if (registerUser.fulfilled.match(resultAction)) {
       navigate("/login");
@@ -46,38 +66,33 @@ export default function RegisterForm() {
         component="form"
         onSubmit={handleSubmit}
         sx={{
-          width: 600,
+          width: "90%",
+          maxWidth: 600,
           mx: "auto",
-          mt: 10,
-          p: 5,
+          mt: 8,
+          p: isMobile ? 3 : 5,
           borderRadius: 4,
-          backgroundColor: "#2c3e65", // Solid slate blue-gray background
+          backgroundColor: "#2c3e65",
           border: "1px solid rgba(255, 255, 255, 0.08)",
           boxShadow: "0 12px 32px rgba(0,0,0,0.4)",
           fontFamily: "'Inter', sans-serif",
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
         }}
       >
         <Typography
-          variant="h4"
-          sx={{
-            mb: 3,
-            fontWeight: 700,
-            color: "#ffffff",
-            textAlign: "center",
-          }}
+          variant={isMobile ? "h5" : "h4"}
+          sx={{ fontWeight: 700, color: "#ffffff", textAlign: "center" }}
         >
           Create Account
         </Typography>
 
-        <Box sx={{ mb: 2 }}>
+        {/* Username */}
+        <Box>
           <Typography
             variant="body2"
-            sx={{
-              color: "#ccc",
-              mb: 0.5,
-              fontWeight: "bold",
-              textAlign: "left",
-            }}
+            sx={{ color: "#ccc", mb: 0.5, fontWeight: "bold" }}
           >
             Username
           </Typography>
@@ -89,17 +104,15 @@ export default function RegisterForm() {
             required
             variant="outlined"
             placeholder="Enter your username"
+            error={!!formErrors.username}
+            helperText={formErrors.username}
             InputLabelProps={{ shrink: false }}
             sx={{
               input: { color: "#fff", fontSize: "1rem" },
               "& .MuiOutlinedInput-root": {
                 borderRadius: 2,
-                "& fieldset": {
-                  borderColor: "#555",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#888",
-                },
+                "& fieldset": { borderColor: "#555" },
+                "&:hover fieldset": { borderColor: "#888" },
                 "&.Mui-focused fieldset": {
                   borderColor: "#aaa",
                   borderWidth: 2,
@@ -109,15 +122,11 @@ export default function RegisterForm() {
           />
         </Box>
 
-        <Box sx={{ mb: 2 }}>
+        {/* Email */}
+        <Box>
           <Typography
             variant="body2"
-            sx={{
-              color: "#ccc",
-              mb: 0.5,
-              fontWeight: "bold",
-              textAlign: "left",
-            }}
+            sx={{ color: "#ccc", mb: 0.5, fontWeight: "bold" }}
           >
             Email
           </Typography>
@@ -130,17 +139,15 @@ export default function RegisterForm() {
             required
             variant="outlined"
             placeholder="Enter your email"
+            error={!!formErrors.email}
+            helperText={formErrors.email}
             InputLabelProps={{ shrink: false }}
             sx={{
               input: { color: "#fff", fontSize: "1rem" },
               "& .MuiOutlinedInput-root": {
                 borderRadius: 2,
-                "& fieldset": {
-                  borderColor: "#555",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#888",
-                },
+                "& fieldset": { borderColor: "#555" },
+                "&:hover fieldset": { borderColor: "#888" },
                 "&.Mui-focused fieldset": {
                   borderColor: "#aaa",
                   borderWidth: 2,
@@ -150,38 +157,45 @@ export default function RegisterForm() {
           />
         </Box>
 
-        <Box sx={{ mb: 2 }}>
+        {/* Password */}
+        <Box>
           <Typography
             variant="body2"
-            sx={{
-              color: "#ccc",
-              mb: 0.5,
-              fontWeight: "bold",
-              textAlign: "left",
-            }}
+            sx={{ color: "#ccc", mb: 0.5, fontWeight: "bold" }}
           >
             Password
           </Typography>
           <TextField
             fullWidth
             name="password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={form.password}
             onChange={handleChange}
             required
             variant="outlined"
             placeholder="Enter your password"
+            error={!!formErrors.password}
+            helperText={formErrors.password}
             InputLabelProps={{ shrink: false }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    edge="end"
+                    sx={{ color: "#ccc" }}
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
             sx={{
               input: { color: "#fff", fontSize: "1rem" },
               "& .MuiOutlinedInput-root": {
                 borderRadius: 2,
-                "& fieldset": {
-                  borderColor: "#555",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#888",
-                },
+                "& fieldset": { borderColor: "#555" },
+                "&:hover fieldset": { borderColor: "#888" },
                 "&.Mui-focused fieldset": {
                   borderColor: "#aaa",
                   borderWidth: 2,
@@ -191,34 +205,35 @@ export default function RegisterForm() {
           />
         </Box>
 
+        {/* Server error or success */}
         {error && (
-          <Typography color="error" variant="body2" mt={1}>
+          <Typography color="error" variant="body2">
             {error}
           </Typography>
         )}
         {success && (
-          <Typography color="primary" variant="body2" mt={1}>
+          <Typography color="primary" variant="body2">
             Registration successful! Redirecting to login...
           </Typography>
         )}
 
+        {/* Submit Button */}
         <Button
           type="submit"
           fullWidth
           variant="contained"
           disabled={loading}
           sx={{
-            mt: 3,
             py: 1.5,
             borderRadius: 2,
             fontSize: "1rem",
             fontWeight: 600,
-            background: "linear-gradient(135deg, #3b82f6 0%, #1e3a8a 100%)", // Blue to indigo gradient
+            background: "linear-gradient(135deg, #3b82f6 0%, #1e3a8a 100%)",
             color: "#fff",
-            textTransform: "none", // Keeps text readable and professional
-            boxShadow: "0 2px 8px rgba(30, 58, 138, 0.3)", // Subtle shadow
+            textTransform: "none",
+            boxShadow: "0 2px 8px rgba(30, 58, 138, 0.3)",
             "&:hover": {
-              background: "linear-gradient(135deg, #2563eb 0%, #1e40af 100%)", // Slightly deeper on hover
+              background: "linear-gradient(135deg, #2563eb 0%, #1e40af 100%)",
               transform: "translateY(-1px)",
               boxShadow: "0 4px 12px rgba(30, 58, 138, 0.4)",
             },
@@ -237,8 +252,12 @@ export default function RegisterForm() {
           sx={{ mt: 3, textAlign: "center", color: "#dcdbdbff" }}
         >
           Already have an account?{" "}
-          <Link href="/login" sx={{ color: "#b6d1ecff" }}>
-            login
+          <Link
+            component={RouterLink}
+            to="/login"
+            sx={{ color: "#fff", fontWeight: 600 }}
+          >
+            Login
           </Link>
         </Typography>
       </Box>

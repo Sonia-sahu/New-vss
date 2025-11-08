@@ -9,6 +9,9 @@ import {
   CircularProgress,
   IconButton,
   Grid,
+  Stack,
+  Container,
+  Paper,
 } from "@mui/material";
 import { fetchSkills } from "../features/skills/actions/skillActions";
 import SkillList from "../features/skills/components/SkillList";
@@ -23,6 +26,9 @@ export default function PrivateProfilePage() {
     (state) => state.community
   );
   const { user } = useSelector((state) => state.auth);
+  const profileImageUrl = user?.profile_picture
+    ? `http://127.0.0.1:8000${user.profile_picture}`
+    : "/default-profile.png";
 
   useEffect(() => {
     dispatch(fetchProfile(user));
@@ -37,7 +43,7 @@ export default function PrivateProfilePage() {
           justifyContent: "center",
           alignItems: "center",
           minHeight: "80vh",
-          backgroundColor: "#2c3e65",
+          backgroundColor: "#535455ff",
         }}
       >
         <CircularProgress />
@@ -62,141 +68,124 @@ export default function PrivateProfilePage() {
   }
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        px: 2,
-        py: 5,
-        backgroundColor: "#2c3e65",
-        minHeight: "100vh",
-      }}
-    >
-      <Box
-        sx={{
-          width: "100%",
-          maxWidth: 1000,
-          borderRadius: 4,
-          p: { xs: 3, sm: 5 },
-          backgroundColor: "#2c3e65",
-        }}
-      >
-        {/* Header */}
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
-            alignItems: "center",
-            justifyContent: "space-between",
-            mb: 4,
-          }}
+    <Box>
+      <Container maxWidth="lg" sx={{ py: { xs: 3, md: 6 } }}>
+        <Paper
+          elevation={4}
+          sx={{ p: { xs: 2, sm: 4 }, borderRadius: 4, bgcolor: "#cfcbcbff" }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
-            <Avatar
-              sx={{
-                width: 90,
-                height: 90,
-                bgcolor: "primary.main",
-                fontSize: 36,
-              }}
-            >
-              {user.username[0]?.toUpperCase()}
-            </Avatar>
-            <Box>
-              <Typography variant="h5" fontWeight="bold">
+          {/* Header Section */}
+          <Grid container spacing={3} alignItems="center">
+            <Grid item xs={12} md={2}>
+              <Avatar
+                src={profileImageUrl}
+                sx={{
+                  width: { xs: 70, md: 100 },
+                  height: { xs: 70, md: 100 },
+                  fontSize: { xs: 28, md: 40 },
+                  color: "#2c3e50",
+
+                  bgcolor: "primary.main",
+                }}
+              >
+                {user.username[0]?.toUpperCase()}
+              </Avatar>
+            </Grid>
+            <Grid item xs={12} md={8}>
+              <Typography variant="h5" fontWeight="bold" color="#2c3e50">
                 {user.username}
               </Typography>
-              <Typography color="text.secondary" sx={{ mt: 0.5 }}>
+              <Typography variant="body2" color="#2c3e50">
                 {user.expertise || "No expertise specified"}
               </Typography>
+            </Grid>
+          </Grid>
+
+          {/* Followers / Following */}
+          <Grid container spacing={2} mt={4}>
+            <Grid item xs={12} sm={6}>
+              <Stack
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                spacing={1}
+                sx={{ bgcolor: "#2c3e50", py: 1, px: 1, borderRadius: 1 }}
+              >
+                <Typography fontWeight="bold"> Followers</Typography>
+                <Box
+                  sx={{
+                    px: 1.5,
+                    py: 0.5,
+                    borderRadius: 2,
+                    bgcolor: "primary.main",
+                    color: "#e4e1e7ff",
+                    fontWeight: "bold",
+                    fontSize: "0.875rem",
+                  }}
+                >
+                  {user.followers?.length || 0}
+                </Box>
+              </Stack>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Stack
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                spacing={1}
+                sx={{ bgcolor: "#2c3e50", py: 1, px: 1, borderRadius: 1 }}
+              >
+                <Typography fontWeight="bold">Following</Typography>
+                <Box
+                  sx={{
+                    px: 1.5,
+                    py: 0.5,
+                    borderRadius: 2,
+                    bgcolor: "primary.main",
+                    color: "#fff",
+                    fontWeight: "bold",
+                    fontSize: "0.875rem",
+                  }}
+                >
+                  {user.following?.length || 0}
+                </Box>
+              </Stack>
+            </Grid>
+            <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+              <IconButton onClick={() => navigate("/profile")}>
+                <EditIcon sx={{ color: "#2c3e50" }} />
+              </IconButton>
             </Box>
+          </Grid>
+
+          {/* Bio Section */}
+          <Box sx={{ mt: 4 }}>
+            <Typography variant="subtitle1" fontWeight={600} color="#2c3e50">
+              About
+            </Typography>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ mt: 1, color: "#2c3e50" }}
+            >
+              {user.bio || "You haven’t added a bio yet."}
+            </Typography>
           </Box>
-          <IconButton color="primary" onClick={() => navigate("/profile")}>
-            <EditIcon />
-          </IconButton>
-        </Box>
 
-        {/* Bio */}
-        <Typography variant="subtitle1" fontWeight={600}>
-          About
-        </Typography>
-        <Typography color="text.secondary" sx={{ mt: 1, mb: 4 }}>
-          {user.bio || "You haven’t added a bio yet."}
-        </Typography>
-
-        {/* Skills */}
-        <Typography variant="subtitle1" fontWeight={600} mb={1}>
-          Your Skills
-        </Typography>
-        <SkillList userId={user.id} />
-
-        {/* Followers / Following */}
-        <Grid container spacing={2} mt={4}>
-          <Grid item xs={6}>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                px: 3,
-                py: 1.5,
-                borderRadius: 50,
-                bgcolor: "#1e1e1e", // ✅ Dark background
-                color: "#ffffff",
-              }}
+          {/* Skills Section */}
+          <Box sx={{ mt: 4 }}>
+            <Typography
+              variant="subtitle1"
+              fontWeight={600}
+              mb={1}
+              color="#2c3e50"
             >
-              <Typography variant="body1" fontWeight="bold" sx={{ mr: 1 }}>
-                Followers
-              </Typography>
-              <Box
-                sx={{
-                  px: 1.5,
-                  py: 0.5,
-                  borderRadius: 2,
-                  bgcolor: "primary.main",
-                  color: "#fff",
-                  fontWeight: "bold",
-                  fontSize: "0.875rem",
-                }}
-              >
-                {user.followers?.length || 0}
-              </Box>
-            </Box>
-          </Grid>
-
-          <Grid item xs={6}>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                px: 3,
-                py: 1.5,
-                borderRadius: 50,
-                bgcolor: "#1e1e1e",
-                color: "#ffffff",
-              }}
-            >
-              <Typography variant="body1" fontWeight="bold" sx={{ mr: 1 }}>
-                Following
-              </Typography>
-              <Box
-                sx={{
-                  px: 1.5,
-                  py: 0.5,
-                  borderRadius: 2,
-                  bgcolor: "primary.main",
-                  color: "#fff",
-                  fontWeight: "bold",
-                  fontSize: "0.875rem",
-                }}
-              >
-                {user.following?.length || 0}
-              </Box>
-            </Box>
-          </Grid>
-        </Grid>
-      </Box>
+              Your Skills
+            </Typography>
+            <SkillList userId={user.id} />
+          </Box>
+        </Paper>
+      </Container>
     </Box>
   );
 }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import API from "../services/api";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import {
   Box,
   Typography,
@@ -8,14 +9,15 @@ import {
   CircularProgress,
   Grid,
   Paper,
-  Chip,
   Stack,
+  Container,
   Button,
+  IconButton,
 } from "@mui/material";
-import SkillList from "../features/skills/components/SkillList"; // Assuming you have SkillList component
-import { fetchProfile } from "../features/auth/actions/authActions";
+import SkillList from "../features/skills/components/SkillList";
 import { fetchSkills } from "../features/skills/actions/skillActions";
 import { useDispatch, useSelector } from "react-redux";
+import ErrorAlert from "../components/ErrorAlert";
 
 export default function PublicProfilePage() {
   const { id } = useParams();
@@ -23,11 +25,15 @@ export default function PublicProfilePage() {
   const dispatch = useDispatch();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-
   const [isFollowing, setIsFollowing] = useState(false);
 
-  const { user } = useSelector((state) => state.auth);
   const { skills } = useSelector((state) => state.skills);
+
+  const profileImageUrl = profile?.profile_picture?.startsWith("http")
+    ? profile.profile_picture
+    : profile?.profile_picture
+    ? `http://127.0.0.1:8000${profile.profile_picture}`
+    : "/default-profile.png";
 
   useEffect(() => {
     if (id) {
@@ -41,7 +47,6 @@ export default function PublicProfilePage() {
         const res = await API.get(`/community/profile/${id}/`);
         setProfile(res.data);
 
-        // Check follow status
         const followRes = await API.get(`/community/is-following/${id}/`);
         setIsFollowing(followRes.data.is_following);
       } catch (error) {
@@ -53,21 +58,7 @@ export default function PublicProfilePage() {
     fetchProfile();
   }, [id]);
 
-  const handleFollowToggle = async () => {
-    try {
-      if (isFollowing) {
-        await API.post(`/community/unfollow/${id}/`);
-      } else {
-        await API.post(`/community/follow/${id}/`);
-      }
-      setIsFollowing(!isFollowing);
-    } catch (error) {
-      console.error("Error updating follow status:", error);
-    }
-  };
-
   const handleStartChatting = () => {
-    // Navigate to the chat page or open the chat modal
     navigate(`/messages?user=${id}`);
   };
 
@@ -79,6 +70,7 @@ export default function PublicProfilePage() {
           justifyContent: "center",
           alignItems: "center",
           minHeight: "80vh",
+          backgroundColor: "#535455ff",
         }}
       >
         <CircularProgress />
@@ -88,139 +80,158 @@ export default function PublicProfilePage() {
 
   if (!profile) {
     return (
-      <Typography variant="h6" textAlign="center" mt={5}>
-        User not found
-      </Typography>
+      <Box sx={{ maxWidth: 600, mx: "auto", mt: 5 }}>
+        <ErrorAlert message="User profile not found." />
+      </Box>
     );
   }
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        px: 2,
-        py: 5,
-        bgcolor: "background.default", // ✅ dark background
-        minHeight: "100vh",
-      }}
-    >
-      <Paper
-        elevation={4}
-        sx={{
-          width: "100%",
-          maxWidth: 800,
-          borderRadius: 4,
-          p: { xs: 3, sm: 5 },
-          bgcolor: "background.paper", // ✅ theme paper background
-          color: "text.primary", // ✅ readable text
-          border: "1px solid rgba(255,255,255,0.1)", // ✅ subtle border
-          backdropFilter: "blur(6px)", // ✅ optional depth
-        }}
-      >
-        {/* Header */}
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
-            alignItems: "center",
-            justifyContent: "space-between",
-            mb: 4,
-          }}
+    <Box>
+      <Container maxWidth="lg" sx={{ py: { xs: 3, md: 6 } }}>
+        <IconButton onClick={() => navigate(-1)}>
+          <ArrowBackIcon />
+        </IconButton>
+        <Paper
+          elevation={4}
+          sx={{ p: { xs: 2, sm: 4 }, borderRadius: 4, bgcolor: "#cfcbcbff" }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
-            <Avatar
-              sx={{
-                width: 90,
-                height: 90,
-                bgcolor: "primary.main",
-                fontSize: 36,
-                color: "#fff",
-              }}
-            >
-              {profile.username[0]?.toUpperCase()}
-            </Avatar>
-
-            <Box>
-              <Typography variant="h5" fontWeight="bold">
+          {/* Header Section */}
+          <Grid container spacing={3} alignItems="center">
+            <Grid item xs={12} md={2}>
+              <Avatar
+                src={profileImageUrl}
+                sx={{
+                  width: { xs: 70, md: 100 },
+                  height: { xs: 70, md: 100 },
+                  fontSize: { xs: 28, md: 40 },
+                  color: "#2c3e50",
+                  bgcolor: "primary.main",
+                }}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "/default-profile.png";
+                }}
+              >
+                {!profileImageUrl && profile.username[0]?.toUpperCase()}
+              </Avatar>
+            </Grid>
+            <Grid item xs={12} md={8}>
+              <Typography variant="h5" fontWeight="bold" color="#2c3e50">
                 {profile.username}
               </Typography>
-              <Typography color="text.secondary" sx={{ mt: 0.5 }}>
+              <Typography variant="body2" color="#2c3e50">
                 {profile.expertise || "No expertise specified"}
               </Typography>
-            </Box>
+            </Grid>
+          </Grid>
+
+          {/* Followers / Following */}
+          <Grid container spacing={2} mt={4}>
+            <Grid item xs={12} sm={6}>
+              <Stack
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                spacing={1}
+                sx={{ bgcolor: "#2c3e50", py: 1, px: 1, borderRadius: 1 }}
+              >
+                <Typography fontWeight="bold" color="#fff">
+                  Followers
+                </Typography>
+                <Box
+                  sx={{
+                    px: 1.5,
+                    py: 0.5,
+                    borderRadius: 2,
+                    bgcolor: "primary.main",
+                    color: "#e4e1e7ff",
+                    fontWeight: "bold",
+                    fontSize: "0.875rem",
+                  }}
+                >
+                  {profile.followers?.length || 0}
+                </Box>
+              </Stack>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Stack
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                spacing={1}
+                sx={{ bgcolor: "#2c3e50", py: 1, px: 1, borderRadius: 1 }}
+              >
+                <Typography fontWeight="bold" color="#fff">
+                  Following
+                </Typography>
+                <Box
+                  sx={{
+                    px: 1.5,
+                    py: 0.5,
+                    borderRadius: 2,
+                    bgcolor: "primary.main",
+                    color: "#fff",
+                    fontWeight: "bold",
+                    fontSize: "0.875rem",
+                  }}
+                >
+                  {profile.following?.length || 0}
+                </Box>
+              </Stack>
+            </Grid>
+          </Grid>
+
+          {/* Bio Section */}
+          <Box sx={{ mt: 4 }}>
+            <Typography variant="subtitle1" fontWeight={600} color="#2c3e50">
+              About
+            </Typography>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ mt: 1, color: "#2c3e50" }}
+            >
+              {profile.bio || "This user hasn’t added a bio yet."}
+            </Typography>
           </Box>
-        </Box>
 
-        {/* Bio */}
-        <Box sx={{ mb: 4 }}>
-          <Typography variant="subtitle1" fontWeight={600}>
-            About
-          </Typography>
-          <Typography color="text.secondary" sx={{ mt: 1 }}>
-            {profile.bio || "This user hasn’t added a bio yet."}
-          </Typography>
-        </Box>
-
-        {/* Skills */}
-        <Box sx={{ mb: 4 }}>
-          <Typography variant="subtitle1" fontWeight={600} mb={1}>
-            Skills
-          </Typography>
-          <SkillList skills={skills} />
-        </Box>
-
-        {/* Followers / Following */}
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <Paper
-              elevation={2}
-              sx={{
-                py: 3,
-                textAlign: "center",
-                borderRadius: 3,
-                bgcolor: "rgba(255,255,255,0.05)", // ✅ dark card
-                color: "text.primary",
-              }}
+          {/* Skills Section */}
+          <Box sx={{ mt: 4 }}>
+            <Typography
+              variant="subtitle1"
+              fontWeight={600}
+              mb={1}
+              color="#2c3e50"
             >
-              <Typography variant="h6" fontWeight="bold" color="primary.main">
-                {profile.followers?.length || 0}
-              </Typography>
-              <Typography color="text.secondary">Followers</Typography>
-            </Paper>
-          </Grid>
+              Skills
+            </Typography>
+            <SkillList skills={skills} />
+          </Box>
 
-          <Grid item xs={6}>
-            <Paper
-              elevation={2}
+          {/* Start Chatting Button */}
+          <Box sx={{ mt: 4 }}>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
               sx={{
-                py: 3,
-                textAlign: "center",
-                borderRadius: 3,
-                bgcolor: "rgba(255,255,255,0.05)", // ✅ dark card
-                color: "text.primary",
+                py: 1.2,
+                fontWeight: "bold",
+                fontSize: "1rem",
+                bgcolor: "primary.main",
+                color: "#fff",
+                "&:hover": {
+                  bgcolor: "primary.dark",
+                },
               }}
+              onClick={handleStartChatting}
             >
-              <Typography variant="h6" fontWeight="bold" color="primary.main">
-                {profile.following?.length || 0}
-              </Typography>
-              <Typography color="text.secondary">Following</Typography>
-            </Paper>
-          </Grid>
-        </Grid>
-
-        {/* Start Chatting Button */}
-        <Box sx={{ mt: 3 }}>
-          <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            onClick={handleStartChatting}
-          >
-            Start Chatting
-          </Button>
-        </Box>
-      </Paper>
+              Say Hello and Start a Conversation
+            </Button>
+          </Box>
+        </Paper>
+      </Container>
     </Box>
   );
 }

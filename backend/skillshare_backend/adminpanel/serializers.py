@@ -37,4 +37,4 @@ class UserManagementSerializer(serializers.ModelSerializer):
 class ModerationLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = ModerationLog
-        fields = ['id', 'admin', 'skill', 'action', 'reason', 'timestamp']
+        fields = ['id', 'admin', 'skill', 'action', 'reason', 'timestamp', 'skill_id']

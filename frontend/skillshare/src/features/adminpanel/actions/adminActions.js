@@ -42,6 +42,7 @@ export const fetchModerationLogs = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const res = await API.get("/adminpanel/logs/");
+      console.log("Fetched moderation logs:", res.data);
       return res.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || err.message);

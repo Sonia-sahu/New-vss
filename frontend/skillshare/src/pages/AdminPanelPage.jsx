@@ -5,7 +5,6 @@ import { fetchAllSkills } from "../features/skills/actions/skillActions";
 import AdminDashboard from "../features/adminpanel/components/AdminDashboard";
 import UserManagementTable from "../features/adminpanel/components/UserManagementTable";
 import ModerationLogTable from "../features/adminpanel/components/ModerationLogTable";
-import SkillModerationCard from "../features/adminpanel/components/SkillModerationCard";
 
 export default function AdminPanelPage() {
   const dispatch = useDispatch();

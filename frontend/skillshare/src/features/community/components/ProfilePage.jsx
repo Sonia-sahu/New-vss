@@ -36,7 +36,11 @@ export default function ProfilePage() {
       {/* Profile Header */}
       <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
         <Avatar
-          src={profile.profile_picture}
+          src={
+            profile.profile_picture?.startsWith("http")
+              ? profile.profile_picture
+              : `http://127.0.0.1:8000${profile.profile_picture || ""}`
+          }
           alt={profile.username}
           sx={{ width: 80, height: 80, mr: 2 }}
         />
@@ -71,7 +75,20 @@ export default function ProfilePage() {
         {profile.followers?.length > 0 ? (
           profile.followers.map((follower) => (
             <ListItem key={follower.id}>
-              <Avatar src={follower.profile_picture} sx={{ mr: 2 }} />
+              <Avatar
+                src={
+                  follower.profile_picture?.startsWith("http")
+                    ? follower.profile_picture
+                    : `http://127.0.0.1:8000${follower.profile_picture || ""}`
+                }
+                alt={follower.username}
+                sx={{ mr: 2 }}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "/default-profile.png";
+                }}
+              />
+
               <ListItemText
                 primary={
                   <Link
@@ -99,7 +116,20 @@ export default function ProfilePage() {
         {profile.following?.length > 0 ? (
           profile.following.map((followed) => (
             <ListItem key={followed.id}>
-              <Avatar src={followed.profile_picture} sx={{ mr: 2 }} />
+              <Avatar
+                src={
+                  followed.profile_picture?.startsWith("http")
+                    ? followed.profile_picture
+                    : `http://127.0.0.1:8000${followed.profile_picture || ""}`
+                }
+                alt={followed.username}
+                sx={{ mr: 2 }}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "/default-profile.png";
+                }}
+              />
+
               <ListItemText
                 primary={
                   <Link

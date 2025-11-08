@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchTutorials } from "../actions/communityActions";
 import TutorialCard from "./TutorialCard";
 import { Grid, Typography } from "@mui/material";
+import ErrorAlert from "../../../components/ErrorAlert";
 
 const TutorialFeed = () => {
   const dispatch = useDispatch();
@@ -15,7 +16,13 @@ const TutorialFeed = () => {
   if (tutorialStatus === "loading")
     return <Typography sx={{ p: 3 }}>Loading tutorials...</Typography>;
   if (!tutorials.length)
-    return <Typography sx={{ p: 3 }}>No tutorials found.</Typography>;
+    return (
+      <Grid container justifyContent="center" sx={{ px: 3, py: 4 }}>
+        <Grid item xs={12} md={8}>
+          <ErrorAlert message="No tutorials found." />
+        </Grid>
+      </Grid>
+    );
 
   return (
     <Grid container spacing={3} sx={{ px: 3, py: 2 }}>

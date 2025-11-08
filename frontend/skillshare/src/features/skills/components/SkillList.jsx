@@ -87,26 +87,52 @@ export default function SkillList({ userId: propUserId }) {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Title</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>Category</TableCell>
-              <TableCell>Certification</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell sx={{ color: "#2c3e50", fontWeight: "bold" }}>
+                Title
+              </TableCell>
+              <TableCell sx={{ color: "#2c3e50", fontWeight: "bold" }}>
+                Description
+              </TableCell>
+              <TableCell sx={{ color: "#2c3e50", fontWeight: "bold" }}>
+                Category
+              </TableCell>
+              <TableCell sx={{ color: "#2c3e50", fontWeight: "bold" }}>
+                Certification
+              </TableCell>
+              <TableCell sx={{ color: "#2c3e50", fontWeight: "bold" }}>
+                Status
+              </TableCell>
+              <TableCell
+                sx={{ color: "#2c3e50", fontWeight: "bold" }}
+                align="center"
+              >
+                Actions
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {skills.map((skill) => (
-              <TableRow key={skill.id}>
-                <TableCell>{skill.title}</TableCell>
-                <TableCell>{skill.description}</TableCell>
-
-                <TableCell>
+            {skills.map((skill, index) => (
+              <TableRow
+                key={skill.id}
+                sx={{
+                  backgroundColor: index % 2 === 0 ? "#d6d3d3ff" : "#d6d3d3ff",
+                  "&:hover": { backgroundColor: "#b3b1b1ff" },
+                }}
+              >
+                <TableCell sx={{ color: "#2c3e50" }}>{skill.title}</TableCell>
+                <TableCell sx={{ color: "#2c3e50" }}>
+                  {skill.description}
+                </TableCell>
+                <TableCell sx={{ color: "#2c3e50" }}>
+                  {skill.category}
+                </TableCell>
+                <TableCell sx={{ color: "#2c3e50" }}>
                   {skill.certification_url ? (
                     <a
                       href={skill.certification_url}
                       target="_blank"
                       rel="noopener noreferrer"
+                      style={{ color: "#2c3e50", textDecoration: "underline" }}
                     >
                       View PDF
                     </a>
@@ -114,23 +140,21 @@ export default function SkillList({ userId: propUserId }) {
                     "No certification uploaded"
                   )}
                 </TableCell>
-
-                <TableCell>{skill.category}</TableCell>
-                <TableCell>{skill.status}</TableCell>
-                <TableCell>
+                <TableCell sx={{ color: "#2c3e50" }}>{skill.status}</TableCell>
+                <TableCell align="center">
                   <IconButton
                     size="small"
                     color="primary"
                     onClick={() => handleEditClick(skill)}
                   >
-                    <EditIcon fontSize="small" />
+                    <EditIcon fontSize="small" sx={{ color: "#2b283bff" }} />
                   </IconButton>
                   <IconButton
                     size="small"
                     color="error"
                     onClick={() => handleDeleteClick(skill.id)}
                   >
-                    <DeleteIcon fontSize="small" />
+                    <DeleteIcon fontSize="small" sx={{ color: "#2b283bff" }} />
                   </IconButton>
                 </TableCell>
               </TableRow>

@@ -94,11 +94,25 @@ def public_profile_view(request, user_id):
         'username': user.username,
         'bio': getattr(user, 'bio', ''),
         'expertise': getattr(user, 'expertise', ''),
-        'followers': [{'id': f.follower.id, 'username': f.follower.username} for f in followers],
-        'following': [{'id': f.following.id, 'username': f.following.username} for f in following],
+        'profile_picture': user.profile_picture.url if user.profile_picture else None,
+        'followers': [
+            {
+                'id': f.follower.id,
+                'username': f.follower.username,
+                'profile_picture': f.follower.profile_picture.url if f.follower.profile_picture else None
+            }
+            for f in followers
+        ],
+        'following': [
+            {
+                'id': f.following.id,
+                'username': f.following.username,
+                'profile_picture': f.following.profile_picture.url if f.following.profile_picture else None
+            }
+            for f in following
+        ],
     }
     return Response(data)
-
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

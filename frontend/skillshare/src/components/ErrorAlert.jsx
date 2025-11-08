@@ -1,10 +1,12 @@
 import { Alert } from "@mui/material";
 
-export default function ErrorAlert({ message }) {
+export default function ErrorAlert({
+  message = "The requested resource was not found.",
+}) {
   if (!message) return null;
 
   return (
-    <Alert severity="error" sx={{ mt: 2 }}>
+    <Alert severity="warning" sx={{ mt: 2 }}>
       {message}
     </Alert>
   );

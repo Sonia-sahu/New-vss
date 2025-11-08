@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProfile, updateProfile } from "../actions/authActions";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import {
+  IconButton,
   Box,
   TextField,
   Button,
@@ -10,10 +12,12 @@ import {
   Stack,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { validateForm } from "../../../utils/validateForm";
 
 export default function ProfileEditor() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     first_name: "",
@@ -24,7 +28,7 @@ export default function ProfileEditor() {
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
-  const navigate = useNavigate();
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     dispatch(fetchProfile());
@@ -45,7 +49,9 @@ export default function ProfileEditor() {
   }, [user]);
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const handleFileChange = (e) => {
@@ -57,6 +63,18 @@ export default function ProfileEditor() {
   };
 
   const handleSubmit = () => {
+    const { isValid, errors: validationErrors } = validateForm(form, [
+      "first_name",
+      "last_name",
+      "bio",
+      "expertise",
+    ]);
+
+    if (!isValid) {
+      setErrors(validationErrors);
+      return;
+    }
+
     const formData = new FormData();
     formData.append("first_name", form.first_name);
     formData.append("last_name", form.last_name);
@@ -76,6 +94,9 @@ export default function ProfileEditor() {
   return (
     <Box sx={{ width: 600, mx: "auto", mt: 4 }}>
       <Typography variant="h5" gutterBottom>
+        <IconButton onClick={() => navigate(-1)}>
+          <ArrowBackIcon />
+        </IconButton>
         Edit Profile
       </Typography>
       <Stack spacing={2}>
@@ -84,12 +105,16 @@ export default function ProfileEditor() {
           name="first_name"
           value={form.first_name}
           onChange={handleChange}
+          error={!!errors.first_name}
+          helperText={errors.first_name}
         />
         <TextField
           label="Last Name"
           name="last_name"
           value={form.last_name}
           onChange={handleChange}
+          error={!!errors.last_name}
+          helperText={errors.last_name}
         />
         <TextField
           label="Bio"
@@ -98,13 +123,18 @@ export default function ProfileEditor() {
           rows={3}
           value={form.bio}
           onChange={handleChange}
+          error={!!errors.bio}
+          helperText={errors.bio}
         />
         <TextField
           label="Expertise"
           name="expertise"
           value={form.expertise}
           onChange={handleChange}
+          error={!!errors.expertise}
+          helperText={errors.expertise}
         />
+
         <Typography variant="subtitle1">Upload Profile Picture</Typography>
         <input type="file" accept="image/*" onChange={handleFileChange} />
         <Typography variant="caption" color="text.secondary">
@@ -123,7 +153,6 @@ export default function ProfileEditor() {
           <Button variant="contained" color="primary" onClick={handleSubmit}>
             Save Changes
           </Button>
-
           <Button variant="outlined" color="secondary" onClick={handleAddSkill}>
             Add Skills
           </Button>

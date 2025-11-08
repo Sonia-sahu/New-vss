@@ -3,6 +3,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
+from django.db.models import Count, Avg,F
+from feedback.models import Feedback
+from workshops.models import Workshop
 from django.shortcuts import get_object_or_404
 from .models import Skill, SkillAnalytics
 from .serializers import SkillSerializer, SkillAnalyticsSerializer
@@ -62,10 +65,10 @@ def get_user_skills(request, user_id):
     return Response(serializer.data)
 
 # ✅ Skill analytics
-class SkillAnalyticsView(generics.RetrieveAPIView):
-    queryset = SkillAnalytics.objects.all()
-    serializer_class = SkillAnalyticsSerializer
-    permission_classes = [IsAuthenticated]
+# class SkillAnalyticsView(generics.RetrieveAPIView):
+#     queryset = SkillAnalytics.objects.all()
+#     serializer_class = SkillAnalyticsSerializer
+#     permission_classes = [IsAuthenticated]
 
 # ✅ Create a new skill
 @api_view(['POST'])
@@ -75,6 +78,7 @@ def create_skill(request):
     description = request.data.get('description')
     category = request.data.get('category')
     status_value = request.data.get('status')
+    certification=request.data.get('certification')
 
     if not title or not description or not category or not status_value:
         return Response({"error": "Missing required fields"}, status=status.HTTP_400_BAD_REQUEST)
@@ -85,6 +89,8 @@ def create_skill(request):
         "category": category,
         "status": status_value,
         "user": request.user,
+        
+      "certification":certification,
     }
 
     try:
@@ -137,3 +143,41 @@ def get_all_skills(request):
 
     serializer = SkillSerializer(skills, many=True, context={'request': request})
     return Response(serializer.data)
+
+@api_view(['GET'])
+def skill_analytics(request):
+    try:
+        total_skills = Skill.objects.count()
+
+        skill_types = (
+            Skill.objects.values('category')
+            .annotate(count=Count('id'))
+            .order_by('-count')
+        )
+
+        avg_ratings = (
+        Feedback.objects
+       .filter(workshop__skill__isnull=False)
+       .annotate(skill_title=F('workshop__skill__title'))
+       .values('skill_title')
+       .annotate(avg_rating=Avg('rating'))
+       .order_by('-avg_rating')
+        )
+
+
+        workshop_analysis = (
+            Workshop.objects.values('skill__title')
+            .annotate(count=Count('id'))
+            .order_by('-count')
+        )
+
+        return Response({
+            'total_skills': total_skills,
+            'skill_types': list(skill_types),
+            'avg_ratings': list(avg_ratings),
+            'workshop_analysis': list(workshop_analysis)
+        }, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        

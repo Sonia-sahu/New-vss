@@ -7,7 +7,9 @@ import {
   TextField,
   Paper,
   Divider,
+  IconButton,
 } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Link, useNavigate } from "react-router-dom";
 import messagingService from "../services/chatService";
 import MessageIcon from "@mui/icons-material/Message";
@@ -47,6 +49,9 @@ const MessageList = ({ conversations, loading, error }) => {
 
   return (
     <Box sx={{ maxWidth: "700px", mx: "auto", p: 2 }}>
+      <IconButton onClick={() => navigate(-1)}>
+        <ArrowBackIcon />
+      </IconButton>
       <Typography variant="h5" sx={{ mb: 3, fontWeight: 600 }}>
         Your Conversations
       </Typography>

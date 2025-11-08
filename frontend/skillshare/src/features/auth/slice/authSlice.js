@@ -1,7 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { loginUser, registerUser, fetchProfile } from "../actions/authActions";
+import {
+  loginUser,
+  registerUser,
+  fetchProfile,
+  followUser,
+  sendResetLink,
+  resetPassword,
+} from "../actions/authActions";
 import { removeToken, setToken } from "../../../utils/tokenUtils";
-import axios from "axios";
 
 const initialState = {
   user: JSON.parse(localStorage.getItem("user")) || null,
@@ -11,26 +17,6 @@ const initialState = {
   success: false,
   isLoggedIn: false,
 };
-
-// ✅ Follow user thunk
-export const followUser = createAsyncThunk(
-  "auth/followUser",
-  async (targetUserId, { getState, rejectWithValue }) => {
-    try {
-      const { auth } = getState();
-      const loggedInUserId = auth.user.id;
-
-      const response = await axios.post("/api/follow", {
-        followerId: loggedInUserId,
-        followingId: targetUserId,
-      });
-
-      return response.data; // should return updated user info
-    } catch (error) {
-      return rejectWithValue(error.response?.data || "Follow failed");
-    }
-  }
-);
 
 const authSlice = createSlice({
   name: "auth",
@@ -93,6 +79,33 @@ const authSlice = createSlice({
       .addCase(followUser.fulfilled, (state, action) => {
         state.user.following = action.payload.following;
         state.user.followers = action.payload.followers;
+      })
+
+      .addCase(sendResetLink.pending, (state) => {
+        state.loading = true;
+        state.message = "";
+        state.error = "";
+      })
+      .addCase(sendResetLink.fulfilled, (state, action) => {
+        state.loading = false;
+        state.message = action.payload;
+      })
+      .addCase(sendResetLink.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(resetPassword.pending, (state) => {
+        state.loading = true;
+        state.message = "";
+        state.error = "";
+      })
+      .addCase(resetPassword.fulfilled, (state, action) => {
+        state.loading = false;
+        state.message = action.payload;
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });

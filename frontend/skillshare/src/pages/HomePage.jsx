@@ -103,7 +103,7 @@ export default function HomePage() {
                 transform: "translateY(-2px)",
               },
             }}
-            onClick={() => alert("Join Community")}
+            onClick={() => navigate("/login")}
           >
             Join Community
           </Button>

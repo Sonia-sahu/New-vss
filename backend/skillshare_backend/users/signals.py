@@ -2,6 +2,7 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
+from django.db import models
 from notifications.utils import create_notification
 
 User = get_user_model()
@@ -14,7 +15,7 @@ def new_user_suggestions(sender, instance, created, **kwargs):
     # Decide recipients for suggestion notifications.
     # Simple rule: notify up to 10 users with most followers (example)
     try:
-        from skillshare_backend.community.models import Follow
+        from community.models import Follow
         # count followers per user
         user_ids = (
             Follow.objects

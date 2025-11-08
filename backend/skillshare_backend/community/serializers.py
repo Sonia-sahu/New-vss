@@ -8,7 +8,7 @@ class UserExploreSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'bio', 'expertise', 'skills', 'is_following']
+        fields = ['id', 'username', 'bio', 'expertise', 'skills', 'profile_picture','is_following']
 
     def get_is_following(self, obj):
         request = self.context.get('request')

@@ -57,6 +57,11 @@ export const getSkillAnalytics = async (id) => {
   }
 };
 
+export const fetchAnalytics = async () => {
+  const response = await API.get("skills/analytics/");
+  return response.data;
+};
+
 // Update the status of a skill (admin-only functionality)
 export const updateSkillStatus = async (skillId, status) => {
   try {

@@ -8,9 +8,9 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import { useState } from "react";
+import { use, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { followUser, unfollowUser } from "../actions/communityActions";
 
 export default function UserCard({ user }) {
@@ -18,6 +18,10 @@ export default function UserCard({ user }) {
   const [isFollowing, setIsFollowing] = useState(user.is_following);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const profileImageUrl = user?.profile_picture?.startsWith("http")
+    ? user.profile_picture
+    : `http://127.0.0.1:8000${user.profile_picture || ""}`;
 
   const handleFollowToggle = async () => {
     if (isFollowing) {
@@ -53,7 +57,7 @@ export default function UserCard({ user }) {
       onClick={openProfile} //  Entire card is clickable
     >
       <Avatar
-        src={user.profile_picture}
+        src={profileImageUrl}
         alt={user.username}
         sx={{ width: 60, height: 60, mx: "auto", mb: 1 }}
       />

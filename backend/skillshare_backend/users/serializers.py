@@ -3,6 +3,9 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import authenticate
 from .models import User, UserSettings
 
+from rest_framework import serializers
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=False)
@@ -58,3 +61,13 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         })
         data["user"] = {"id": user.id, "email": user.email, "username": user.username}
         return data
+
+
+
+class ForgotPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def validate_email(self, value):
+        if not User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("User with this email does not exist.")
+        return value

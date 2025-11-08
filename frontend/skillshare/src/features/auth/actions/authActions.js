@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import authService from "../services/authService";
 import { removeToken, setToken } from "../../../utils/tokenUtils";
+import API from "../../../services/api";
 
 // --- Register New User ---
 export const registerUser = createAsyncThunk(
@@ -81,20 +82,6 @@ export const refreshToken = createAsyncThunk(
   }
 );
 
-// --- Change Password ---
-export const changePassword = createAsyncThunk(
-  "auth/changePassword",
-  async (passwordData, thunkAPI) => {
-    try {
-      return await authService.changePassword(passwordData);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data || "Password change failed"
-      );
-    }
-  }
-);
-
 // --- Logout User ---
 export const logoutUser = createAsyncThunk(
   "auth/logout",
@@ -135,6 +122,56 @@ export const updateSettings = createAsyncThunk(
       return thunkAPI.rejectWithValue(
         error.response?.data || "Failed to update settings"
       );
+    }
+  }
+);
+
+export const sendResetLink = createAsyncThunk(
+  "auth/sendResetLink",
+  async (email, { rejectWithValue }) => {
+    try {
+      const response = await API.post("/users/forgot-password/", { email });
+      return response.data.message;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.error || "Failed to send reset link"
+      );
+    }
+  }
+);
+export const resetPassword = createAsyncThunk(
+  "auth/resetPassword",
+  async ({ uid, token, newPassword }, { rejectWithValue }) => {
+    try {
+      const response = await API.post("/users/reset-password/", {
+        uid,
+        token,
+        new_password: newPassword,
+      });
+      return response.data.message;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.error || "Failed to reset password"
+      );
+    }
+  }
+);
+// ✅ Follow user thunk
+export const followUser = createAsyncThunk(
+  "auth/followUser",
+  async (targetUserId, { getState, rejectWithValue }) => {
+    try {
+      const { auth } = getState();
+      const loggedInUserId = auth.user.id;
+
+      const response = await API.post("/api/follow", {
+        followerId: loggedInUserId,
+        followingId: targetUserId,
+      });
+
+      return response.data; // should return updated user info
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Follow failed");
     }
   }
 );

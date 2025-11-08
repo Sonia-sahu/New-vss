@@ -43,13 +43,22 @@ const MessageThread = () => {
   return (
     <Box
       sx={{
-        p: 2,
-        bgcolor: "background.default", // ✅ dark background
-        borderRadius: 3,
-        boxShadow: 2,
-        maxWidth: "800px",
-        margin: "0 auto",
-        color: "text.primary", // ✅ readable text
+        p: { xs: 1, sm: 2 },
+        bgcolor: "background.default",
+        borderRadius: { xs: 0, sm: 3 },
+        boxShadow: { xs: 0, sm: 2 },
+        width: "100%",
+        maxWidth: {
+          xs: "100%", // full width on extra-small screens
+          sm: "95%", // slightly narrower on small screens
+          md: "900px", // wider on medium screens
+          lg: "1000px", // even wider on large screens
+        },
+        mx: "auto",
+        color: "text.primary",
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
       }}
     >
       <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}></Typography>

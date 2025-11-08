@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import API from "../../../services/api";
+import { fetchAnalytics } from "../services/skillService";
 
 // Fetch skills for a user
 export const fetchSkills = createAsyncThunk(
@@ -69,6 +70,16 @@ export const fetchSkillAnalytics = createAsyncThunk(
     return res.data;
   }
 );
+export const getAnalytics = createAsyncThunk(
+  "analytics/getAnalytics",
+  async (_, thunkAPI) => {
+    try {
+      return await fetchAnalytics();
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || "Error");
+    }
+  }
+);
 
 // Update the status of a skill (admin-only functionality)
 export const updateSkillStatus = createAsyncThunk(
@@ -88,6 +99,7 @@ export const fetchAllSkills = createAsyncThunk(
     try {
       const url = status ? `/skills/all/?status=${status}` : "/skills/all/";
       const res = await API.get(url);
+      console.log("Fetched all skills:", res.data);
       return res.data;
     } catch (error) {
       return rejectWithValue(

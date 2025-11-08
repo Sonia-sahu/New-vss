@@ -53,6 +53,7 @@ import {
   connectNotificationsSocket,
   disconnectNotificationsSocket,
 } from "../features/notifications/services/notificationService";
+import Footer from "../components/Footer";
 
 export default function DashboardLayout({ children }) {
   const token = useSelector((state) => state.auth?.token);
@@ -74,12 +75,23 @@ export default function DashboardLayout({ children }) {
   }, [user]);
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        width: "100%",
+        minHeight: "100vh",
+        overflowX: "hidden",
+      }}
+    >
       {token && <Navbar toggleSidebar={toggleSidebar} />}
       {token && <Sidebar open={sidebarOpen} toggleSidebar={toggleSidebar} />}
       <Box sx={{ flexGrow: 1, pt: token ? 8 : 0 }}>
-        <Container sx={{ mt: 4 }}>{children}</Container>
+        <Container sx={{ mt: 4 }} maxWidth={false}>
+          {children}
+        </Container>
       </Box>
+      <Footer />
     </Box>
   );
 }

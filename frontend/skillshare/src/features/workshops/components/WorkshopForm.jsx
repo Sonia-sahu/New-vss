@@ -88,6 +88,7 @@ export default function WorkshopForm() {
     const payload = {
       ...form,
       date: isoDate,
+      skill: form.skill_id,
     };
 
     dispatch(createWorkshop(payload));
@@ -107,9 +108,10 @@ export default function WorkshopForm() {
         mt: 5,
         p: 4,
         borderRadius: 2,
+        bgcolor: "#a8a8a8ff",
       }}
     >
-      <Typography variant="h5" gutterBottom>
+      <Typography variant="h5" gutterBottom sx={{ color: "#313454ff" }}>
         Create New Workshop
       </Typography>
       <Stack spacing={2}>
@@ -119,6 +121,14 @@ export default function WorkshopForm() {
           value={form.id}
           onChange={handleChange}
           fullWidth
+          sx={{
+            "& .MuiInputBase-input": {
+              color: "#123043ff", // soft blue for input text
+            },
+            "& .MuiInputLabel-root": {
+              color: "#123043ff", // soft blue for label
+            },
+          }}
         />
         <TextField
           label="Title"
@@ -126,7 +136,17 @@ export default function WorkshopForm() {
           value={form.title}
           onChange={handleChange}
           fullWidth
+          InputLabelProps={{ color: "#313454ff" }}
+          sx={{
+            "& .MuiInputBase-input": {
+              color: "#123043ff", // soft blue for input text
+            },
+            "& .MuiInputLabel-root": {
+              color: "#123043ff", // soft blue for label
+            },
+          }}
         />
+
         <TextField
           label="Description"
           name="description"
@@ -135,7 +155,16 @@ export default function WorkshopForm() {
           multiline
           rows={3}
           fullWidth
+          sx={{
+            "& .MuiInputBase-input": {
+              color: "#123043ff", // soft blue for input text
+            },
+            "& .MuiInputLabel-root": {
+              color: "#123043ff", // soft blue for label
+            },
+          }}
         />
+
         <TextField
           select
           label="Skill"
@@ -144,13 +173,21 @@ export default function WorkshopForm() {
           onChange={handleChange}
           fullWidth
           disabled={loading}
+          sx={{
+            "& .MuiInputBase-input": {
+              color: "#123043ff", // soft blue for input text
+            },
+            "& .MuiInputLabel-root": {
+              color: "#123043ff", // soft blue for label
+            },
+          }}
           helperText={loading ? "Loading skills..." : "Select a skill"}
           SelectProps={{
             MenuProps: {
               PaperProps: {
                 sx: {
-                  bgcolor: "#1e1e1e",
-                  color: "#ffffff",
+                  bgcolor: "#696868ff",
+                  color: "#242334ff",
                 },
               },
             },
@@ -172,18 +209,31 @@ export default function WorkshopForm() {
           ampm
           minutesStep={5}
           disablePast
-          renderInput={(params) => <TextField {...params} fullWidth />}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              fullWidth
+              sx={{
+                "& .MuiInputBase-input": {
+                  color: "#123043ff", // soft blue for input text
+                },
+                "& .MuiInputLabel-root": {
+                  color: "#123043ff", // soft blue for label
+                },
+              }}
+            />
+          )}
           PopperProps={{
             sx: {
               "& .MuiPaper-root": {
                 backgroundColor: "#1e1e1e",
-                color: "#ffffff",
+                color: "#2f3050ff",
               },
               "& .MuiPickersDay-root": {
-                color: "#ffffff",
+                color: "#2c2121ff",
               },
               "& .MuiTypography-root": {
-                color: "#ffffff",
+                color: "#272342ff",
               },
             },
           }}
@@ -195,6 +245,14 @@ export default function WorkshopForm() {
           value={form.duration_minutes}
           onChange={handleChange}
           fullWidth
+          sx={{
+            "& .MuiInputBase-input": {
+              color: "#123043ff", // soft blue for input text
+            },
+            "& .MuiInputLabel-root": {
+              color: "#123043ff", // soft blue for label
+            },
+          }}
         />
         <TextField
           select
@@ -203,6 +261,14 @@ export default function WorkshopForm() {
           value={form.status}
           onChange={handleChange}
           fullWidth
+          sx={{
+            "& .MuiInputBase-input": {
+              color: "#123043ff", // soft blue for input text
+            },
+            "& .MuiInputLabel-root": {
+              color: "#123043ff", // soft blue for label
+            },
+          }}
         >
           {["upcoming", "completed", "cancelled"].map((status) => (
             <MenuItem key={status} value={status}>
@@ -216,6 +282,14 @@ export default function WorkshopForm() {
           value={form.host_id}
           onChange={handleChange}
           fullWidth
+          sx={{
+            "& .MuiInputBase-input": {
+              color: "#123043ff", // soft blue for input text
+            },
+            "& .MuiInputLabel-root": {
+              color: "#123043ff", // soft blue for label
+            },
+          }}
         />
         <TextField
           label="Created At"
@@ -225,6 +299,14 @@ export default function WorkshopForm() {
           onChange={handleChange}
           fullWidth
           InputLabelProps={{ shrink: true }}
+          sx={{
+            "& .MuiInputBase-input": {
+              color: "#123043ff", // soft blue for input text
+            },
+            "& .MuiInputLabel-root": {
+              color: "#123043ff", // soft blue for label
+            },
+          }}
         />
         <FormControlLabel
           control={
@@ -245,6 +327,14 @@ export default function WorkshopForm() {
               onChange={handleChange}
               fullWidth
               helperText="This will be used to identify the meeting room"
+              sx={{
+                "& .MuiInputBase-input": {
+                  color: "#123043ff", // soft blue for input text
+                },
+                "& .MuiInputLabel-root": {
+                  color: "#123043ff", // soft blue for label
+                },
+              }}
             />
             <TextField
               label="Meeting URL"
@@ -253,6 +343,14 @@ export default function WorkshopForm() {
               onChange={handleChange}
               fullWidth
               helperText="Full URL to the Jitsi meeting"
+              sx={{
+                "& .MuiInputBase-input": {
+                  color: "#123043ff", // soft blue for input text
+                },
+                "& .MuiInputLabel-root": {
+                  color: "#123043ff", // soft blue for label
+                },
+              }}
             />
           </>
         )}

@@ -20,6 +20,9 @@ import PrivateProfilePage from "../pages/PrivateProfile";
 import MessageRoutes from "../features/messages/router/MessageRoutes";
 import ChatRoom from "../features/messages/components/ChatRoom";
 import FeedbackForm from "../features/feedback/components/FeedbackForm";
+import SkillAnalytics from "../pages/SkillAnalytics";
+import ForgotPassword from "../features/auth/components/ForgotPassword";
+import ResetPassword from "../features/auth/components/ResetPassword";
 
 export default function AppRouter() {
   const { token, user } = useSelector((state) => state.auth);
@@ -29,6 +32,10 @@ export default function AppRouter() {
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+
+      {/* Reset Password Page with UID and Token from email link */}
+      <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
 
       <Route element={<ProtectedRoute isAuthenticated={!!token} />}>
         <Route
@@ -131,7 +138,14 @@ export default function AppRouter() {
         />
         <Route path="/*" element={<CommunityRoutes />} />
       </Route>
-
+      <Route
+        path="/analytics"
+        element={
+          <DashboardLayout>
+            <SkillAnalytics />
+          </DashboardLayout>
+        }
+      />
       <Route path="/public-profile" element={<PublicProfilePage />} />
       <Route
         path="/admin"
