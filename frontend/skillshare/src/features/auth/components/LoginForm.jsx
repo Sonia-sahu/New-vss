@@ -32,10 +32,37 @@ export default function LoginForm() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const validateLoginForm = (form, isAdminChecked) => {
+    const errors = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!form.email) {
+      errors.email = "Email is required.";
+    } else if (!emailRegex.test(form.email)) {
+      errors.email = "Please enter a valid email address.";
+    }
+
+    if (!form.password) {
+      errors.password = "Password is required.";
+    }
+
+    if (form.email.includes("admin") && !isAdminChecked) {
+      errors.admin = "You must check 'Login as Admin' to login as an admin.";
+    }
+
+    return errors;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setAdminError("");
     setFormErrors({});
+
+    const validationErrors = validateLoginForm(form, isAdmin);
+    if (Object.keys(validationErrors).length > 0) {
+      setFormErrors(validationErrors);
+      return;
+    }
 
     const resultAction = await dispatch(loginUser(form));
 
@@ -51,10 +78,12 @@ export default function LoginForm() {
 
       navigate(user.is_admin && user.is_superuser ? "/admin" : "/dashboard");
     } else {
-      setFormErrors(validateLoginForm(form, isAdmin));
+      setFormErrors({
+        general: "Login failed. Please check your credentials.",
+      });
     }
   };
-  //unwrap() is used to handle the promise returned by the dispatch function. It allows us to access the fulfilled or rejected value of the async thunk action directly, enabling easier error handling and response processing.
+
   return (
     <Box
       component="form"
@@ -73,6 +102,7 @@ export default function LoginForm() {
         display: "flex",
         flexDirection: "column",
         gap: 2,
+        alignContent: "center",
       }}
     >
       <Typography
@@ -146,8 +176,7 @@ export default function LoginForm() {
         <Box sx={{ mt: 1, textAlign: "right" }}>
           <Link
             href="/forgot-password"
-            underline="hover"
-            sx={{ color: "#90caf9" }}
+            sx={{ color: "#ccc", textDecoration: "none" }}
           >
             Forgot Password?
           </Link>
@@ -168,9 +197,9 @@ export default function LoginForm() {
       />
 
       {/* Admin error */}
-      {adminError && (
+      {(adminError || formErrors.admin) && (
         <Typography color="error" variant="body2">
-          {adminError}
+          {adminError || formErrors.admin}
         </Typography>
       )}
 
@@ -180,6 +209,13 @@ export default function LoginForm() {
           {typeof error === "object"
             ? error.non_field_errors?.join(", ")
             : error}
+        </Typography>
+      )}
+
+      {/* General error */}
+      {formErrors.general && (
+        <Typography color="error" variant="body2">
+          {formErrors.general}
         </Typography>
       )}
 

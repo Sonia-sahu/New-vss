@@ -41,13 +41,14 @@ export default function RegisterForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const resultAction = await dispatch(registerUser(form));
-
     const errors = validateRegistrationForm(form);
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       return;
     }
+
+    setFormErrors({});
+    const resultAction = await dispatch(registerUser(form));
 
     setFormErrors({});
 
@@ -213,7 +214,7 @@ export default function RegisterForm() {
         )}
         {success && (
           <Typography color="primary" variant="body2">
-            Registration successful! Redirecting to login...
+            {/* Registration successful! Redirecting to login... */}
           </Typography>
         )}
 

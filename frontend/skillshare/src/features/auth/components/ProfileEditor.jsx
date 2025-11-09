@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProfile, updateProfile } from "../actions/authActions";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import {
   IconButton,
   Box,
@@ -62,7 +65,7 @@ export default function ProfileEditor() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const { isValid, errors: validationErrors } = validateForm(form, [
       "first_name",
       "last_name",
@@ -72,6 +75,7 @@ export default function ProfileEditor() {
 
     if (!isValid) {
       setErrors(validationErrors);
+      toast.error("Please fix the highlighted errors.");
       return;
     }
 
@@ -84,7 +88,12 @@ export default function ProfileEditor() {
       formData.append("profile_picture", selectedFile);
     }
 
-    dispatch(updateProfile(formData));
+    try {
+      await dispatch(updateProfile(formData)).unwrap();
+      toast.success("Profile updated successfully!");
+    } catch (err) {
+      toast.error("Failed to update profile. Please try again.");
+    }
   };
 
   const handleAddSkill = () => {
@@ -158,6 +167,8 @@ export default function ProfileEditor() {
           </Button>
         </Stack>
       </Stack>
+
+      <ToastContainer position="top-right" autoClose={3000} />
     </Box>
   );
 }
