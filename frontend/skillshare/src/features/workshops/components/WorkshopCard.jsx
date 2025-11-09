@@ -96,8 +96,8 @@ export default function WorkshopCard({ workshop }) {
     <>
       <Card
         sx={{
-          width: 345, // ✅ fixed width
-          height: 300, // ✅ fixed height
+          width: 345, //   fixed width
+          height: 300, //   fixed height
           m: 2,
           cursor: isRegistered ? "pointer" : "default",
           display: "flex",
@@ -165,7 +165,7 @@ export default function WorkshopCard({ workshop }) {
 
           {isRegistered && workshop.status === "upcoming" && (
             <Button size="small" variant="outlined" disabled color="success">
-              ✅ Enrolled
+              Enrolled
             </Button>
           )}
 

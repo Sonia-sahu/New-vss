@@ -16,7 +16,7 @@ export default function CommunityPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
-    dispatch(fetchTutorials()); // ✅ Load tutorials on page load
+    dispatch(fetchTutorials()); //   Load tutorials on page load
   }, [dispatch]);
   // 🔹 Filter tutorials from followed mentors
 
@@ -34,7 +34,7 @@ export default function CommunityPage() {
       <Typography variant="h5" gutterBottom>
         Master New Skills with These Expert-Led Tutorials
       </Typography>
-      <TutorialFeed /> {/* ✅ New tutorial section */}
+      <TutorialFeed /> {/*   New tutorial section */}
       <Divider sx={{ my: 4 }} />
       <Typography variant="h5" gutterBottom>
         Workshops

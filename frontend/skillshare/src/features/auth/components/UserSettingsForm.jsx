@@ -38,7 +38,7 @@ export default function UserSettingsForm() {
     setForm({ ...form, [e.target.name]: e.target.checked });
   };
 
-  // ✅ Corrected submit handler
+  //   Corrected submit handler
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(updateSettings(form)); // dispatch Redux action

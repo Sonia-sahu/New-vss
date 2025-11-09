@@ -95,14 +95,14 @@ const communitySlice = createSlice({
         state.skillStatus = "failed";
         state.skillError = action.error.message;
       })
-      // ✅ Explore Users
+      //   Explore Users
       .addCase(exploreUsers.fulfilled, (state, action) => {
         state.users = action.payload;
         state.status = "succeeded";
         saveToLocalStorage("community_users", state.users);
       })
 
-      // ✅ Toggle Follow/Unfollow
+      //   Toggle Follow/Unfollow
       .addCase(toggleFollowUser.fulfilled, (state, action) => {
         const { userId, isFollowing } = action.payload;
         const user = state.users.find((u) => u.id === userId);
@@ -121,19 +121,19 @@ const communitySlice = createSlice({
         saveToLocalStorage("community_following", state.following);
       })
 
-      // ✅ Followers List
+      //   Followers List
       .addCase(getFollowers.fulfilled, (state, action) => {
         state.followers = action.payload;
         saveToLocalStorage("community_followers", state.followers);
       })
 
-      // ✅ Following List
+      //   Following List
       .addCase(getFollowing.fulfilled, (state, action) => {
         state.following = action.payload;
         saveToLocalStorage("community_following", state.following);
       })
 
-      // ✅ Tutorials
+      //   Tutorials
       .addCase(fetchTutorials.pending, (state) => {
         state.tutorialStatus = "loading";
       })

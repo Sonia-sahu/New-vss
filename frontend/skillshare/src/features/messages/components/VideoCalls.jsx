@@ -29,7 +29,7 @@ const VideoCall = () => {
         mode: ZegoUIKitPrebuilt.OneONoneCall,
       },
     });
-  }, [appID, serverSecret, chatId, userID, username]); // ✅ fixed dependency
+  }, [appID, serverSecret, chatId, userID, username]); //   fixed dependency
 
   return (
     <div ref={callContainerRef} style={{ width: "100%", height: "100vh" }} />

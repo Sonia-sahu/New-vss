@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import API from "../../../services/api";
 
-// ✅ Fetch all notifications
+//  Fetch all notifications
 export const fetchNotifications = createAsyncThunk(
   "notifications/fetchNotifications",
   async (_, { rejectWithValue }) => {
@@ -11,11 +11,11 @@ export const fetchNotifications = createAsyncThunk(
     try {
       console.log(" Fetching notifications from backend...");
       const res = await API.get("/notifications/");
-      console.log("✅ Notifications fetched:", res.data);
+      console.log(" Notifications fetched:", res.data);
       return res.data;
     } catch (err) {
       console.error(
-        "❌ Error fetching notifications:",
+        " Error fetching notifications:",
         err.response?.data || err.message
       );
       return rejectWithValue(err.response?.data || err.message);
@@ -23,7 +23,7 @@ export const fetchNotifications = createAsyncThunk(
   }
 );
 
-// ✅ Mark a notification as read
+// Mark a notification as read
 export const markNotificationRead = createAsyncThunk(
   "notifications/markNotificationRead",
   async (id, { rejectWithValue }) => {
@@ -36,7 +36,7 @@ export const markNotificationRead = createAsyncThunk(
       return id;
     } catch (err) {
       console.error(
-        "❌ Error marking notification as read:",
+        " Error marking notification as read:",
         err.response?.data || err.message
       );
       return rejectWithValue(err.response?.data || err.message);
@@ -44,19 +44,19 @@ export const markNotificationRead = createAsyncThunk(
   }
 );
 
-// ✅ Fetch unread count
+//  Fetch unread count
 export const fetchUnreadCount = createAsyncThunk(
   "notifications/fetchUnreadCount",
   async (_, { rejectWithValue }) => {
     const token = localStorage.getItem("token");
-    if (!token) return 0; // skip when logged out
+    if (!token) return 0;
 
     try {
       const res = await API.get("/notifications/unread-count/");
       return res.data.unread_count;
     } catch (err) {
       console.error(
-        "❌ Error fetching unread count:",
+        " Error fetching unread count:",
         err.response?.data || err.message
       );
       return rejectWithValue(err.response?.data || err.message);

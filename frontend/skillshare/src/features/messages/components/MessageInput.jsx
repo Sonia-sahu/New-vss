@@ -33,15 +33,15 @@ const MessageInput = ({ chatId }) => {
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         sx={{
-          bgcolor: "background.paper", // ✅ matches theme
+          bgcolor: "background.paper", //   matches theme
           "& .MuiInputBase-input": {
-            color: "text.primary", // ✅ sets actual input text color
+            color: "text.primary", //   sets actual input text color
           },
           "& .MuiInputLabel-root": {
-            color: "text.secondary", // ✅ label color
+            color: "text.secondary", //   label color
           },
           "& .MuiOutlinedInput-notchedOutline": {
-            borderColor: "primary.main", // ✅ optional border color
+            borderColor: "primary.main", //   optional border color
           },
         }}
       />

@@ -31,7 +31,7 @@ export const loginUser = createAsyncThunk(
       return {
         access: data.access,
         refresh: data.refresh,
-        user: profile, // ✅ include user object
+        user: profile, //   include user object
       };
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || "Login failed");
@@ -111,7 +111,7 @@ export const fetchSettings = createAsyncThunk(
   }
 );
 
-// --- ✅ Update User Settings ---
+// ---   Update User Settings ---
 export const updateSettings = createAsyncThunk(
   "auth/updateSettings",
   async (settingsData, thunkAPI) => {
@@ -156,7 +156,7 @@ export const resetPassword = createAsyncThunk(
     }
   }
 );
-// ✅ Follow user thunk
+//   Follow user thunk
 export const followUser = createAsyncThunk(
   "auth/followUser",
   async (targetUserId, { getState, rejectWithValue }) => {

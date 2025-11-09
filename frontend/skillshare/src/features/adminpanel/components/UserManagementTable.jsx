@@ -25,6 +25,10 @@ import {
   TableContainer,
   useMediaQuery,
   useTheme,
+  Avatar,
+  Chip,
+  Tooltip,
+  Stack,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -32,7 +36,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 export default function UserManagementTable() {
   const dispatch = useDispatch();
   const { users, status, error } = useSelector((state) => state.admin);
-
+  const user = useSelector((state) => state.auth?.user);
+  const profileImageUrl = user?.profile_picture
+    ? `http://127.0.0.1:8000${user.profile_picture}`
+    : "/default-profile.png";
+  console.log("Profile Image URL:", profileImageUrl);
   const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [formData, setFormData] = useState({
@@ -95,47 +103,98 @@ export default function UserManagementTable() {
           sx={{
             mt: 4,
             overflowX: "auto",
-            bgcolor: "#b3afafff",
+            bgcolor: "#f0f4f8",
             color: "#2c3e50",
+            borderRadius: 2,
+            boxShadow: 3,
           }}
         >
           <TableContainer>
             <Table size={isMobile ? "small" : "medium"}>
               <TableHead>
-                <TableRow>
-                  <TableCell sx={cellStyle}>Username</TableCell>
-                  <TableCell sx={cellStyle}>Email</TableCell>
-                  <TableCell sx={cellStyle}>Role</TableCell>
-                  <TableCell sx={cellStyle}>Mentor</TableCell>
-                  <TableCell sx={cellStyle}>Actions</TableCell>
+                <TableRow sx={{ bgcolor: "#2c3e50" }}>
+                  {["Username", "Email", "Role", "Mentor", "Actions"].map(
+                    (header) => (
+                      <TableCell
+                        key={header}
+                        sx={{ color: "#dedde4ff", fontWeight: "bold" }}
+                      >
+                        {header}
+                      </TableCell>
+                    )
+                  )}
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.map((user) => (
-                  <TableRow key={user.id}>
-                    <TableCell sx={cellStyle}>{user.username}</TableCell>
-                    <TableCell sx={cellStyle}>{user.email}</TableCell>
-                    <TableCell sx={cellStyle}>
-                      {user.is_admin ? "Admin" : "User"}
+                {users.map((user, index) => (
+                  <TableRow
+                    key={user.id}
+                    sx={{
+                      backgroundColor:
+                        index % 2 === 0 ? "#d3d1d1ff" : "#d3d1d1ff",
+                      "&:hover": {
+                        backgroundColor: "#838282ff",
+                        cursor: "pointer",
+                      },
+                    }}
+                  >
+                    <TableCell sx={{ color: "#2b283bff" }}>
+                      <Box display="flex" alignItems="center">
+                        <Avatar
+                          alt={user?.username || "User"}
+                          src={profileImageUrl}
+                          sx={{ mr: 1 }}
+                        >
+                          {user.username[0]}
+                        </Avatar>
+                        {user.username}
+                      </Box>
                     </TableCell>
-                    <TableCell sx={cellStyle}>
-                      {user.is_mentor ? "Yes" : "No"}
+                    <TableCell sx={{ color: "#2b283bff" }}>
+                      {user.email}
+                    </TableCell>
+                    <TableCell sx={{ color: "#2b283bff" }}>
+                      <Chip
+                        label={user.is_admin ? "Admin" : "User"}
+                        sx={{
+                          bgcolor: "#403f43ff", // dark background
+                          color: "#fff", // white text
+                          fontWeight: "bold",
+                        }}
+                        size="small"
+                      />
+                    </TableCell>
+                    <TableCell sx={{ color: "#2b283bff" }}>
+                      <Chip
+                        label={user.is_mentor ? "Yes" : "No"}
+                        color="#524e4eff"
+                        size="small"
+                        sx={{
+                          bgcolor: "#434245ff", // dark background
+                          color: "#fff", // white text
+                          fontWeight: "bold",
+                        }}
+                      />
                     </TableCell>
                     <TableCell>
-                      <IconButton
-                        aria-label="edit"
-                        onClick={() => handleEditClick(user)}
-                        color="primary"
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        aria-label="delete"
-                        onClick={() => handleDeleteClick(user.id)}
-                        color="error"
-                      >
-                        <DeleteIcon />
-                      </IconButton>
+                      <Tooltip title="Edit User">
+                        <IconButton
+                          aria-label="edit"
+                          onClick={() => handleEditClick(user)}
+                          color="primary"
+                        >
+                          <EditIcon sx={{ color: "#2b283bff" }} />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Delete User">
+                        <IconButton
+                          aria-label="delete"
+                          onClick={() => handleDeleteClick(user.id)}
+                          color="error"
+                        >
+                          <DeleteIcon sx={{ color: "#2b283bff" }} />
+                        </IconButton>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -153,58 +212,46 @@ export default function UserManagementTable() {
       >
         <DialogTitle sx={{ color: "#2c3e50" }}>Edit User</DialogTitle>
         <DialogContent>
-          <TextField
-            margin="dense"
-            label="Username"
-            name="username"
-            fullWidth
-            value={formData.username}
-            onChange={handleChange}
-            sx={{ input: { color: "#2c3e50" } }}
-          />
-          <TextField
-            margin="dense"
-            label="Email"
-            name="email"
-            fullWidth
-            value={formData.email}
-            onChange={handleChange}
-            sx={{ input: { color: "#2c3e50" } }}
-          />
-          <FormControl fullWidth margin="dense">
-            <InputLabel sx={{ color: "#2c3e50" }}>Role</InputLabel>
-            <Select
-              name="is_admin"
-              value={formData.is_admin ? "true" : "false"}
+          <Stack spacing={2}>
+            <TextField
+              label="Username"
+              name="username"
+              fullWidth
+              value={formData.username}
               onChange={handleChange}
-              label="Role"
-              sx={{ color: "#2c3e50" }}
-            >
-              <MenuItem value="true" sx={cellStyle}>
-                Admin
-              </MenuItem>
-              <MenuItem value="false" sx={cellStyle}>
-                User
-              </MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl fullWidth margin="dense">
-            <InputLabel sx={{ color: "#2c3e50" }}>Mentor</InputLabel>
-            <Select
-              name="is_mentor"
-              value={formData.is_mentor ? "true" : "false"}
+            />
+            <TextField
+              label="Email"
+              name="email"
+              fullWidth
+              value={formData.email}
               onChange={handleChange}
-              label="Mentor"
-              sx={{ color: "#2c3e50" }}
-            >
-              <MenuItem value="true" sx={cellStyle}>
-                Yes
-              </MenuItem>
-              <MenuItem value="false" sx={cellStyle}>
-                No
-              </MenuItem>
-            </Select>
-          </FormControl>
+            />
+            <FormControl fullWidth>
+              <InputLabel>Role</InputLabel>
+              <Select
+                name="is_admin"
+                value={formData.is_admin ? "true" : "false"}
+                onChange={handleChange}
+                label="Role"
+              >
+                <MenuItem value="true">Admin</MenuItem>
+                <MenuItem value="false">User</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl fullWidth>
+              <InputLabel>Mentor</InputLabel>
+              <Select
+                name="is_mentor"
+                value={formData.is_mentor ? "true" : "false"}
+                onChange={handleChange}
+                label="Mentor"
+              >
+                <MenuItem value="true">Yes</MenuItem>
+                <MenuItem value="false">No</MenuItem>
+              </Select>
+            </FormControl>
+          </Stack>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)}>Cancel</Button>

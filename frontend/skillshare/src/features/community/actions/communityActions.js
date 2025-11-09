@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import API from "../../../services/api";
 
-// ✅ Explore users
+//   Explore users
 export const exploreUsers = createAsyncThunk(
   "community/exploreUsers",
   async (_, { rejectWithValue }) => {
@@ -14,7 +14,7 @@ export const exploreUsers = createAsyncThunk(
   }
 );
 
-// ✅ Toggle Follow/Unfollow user
+//   Toggle Follow/Unfollow user
 export const toggleFollowUser = createAsyncThunk(
   "community/toggleFollowUser",
   async (userId, { rejectWithValue }) => {
@@ -28,7 +28,7 @@ export const toggleFollowUser = createAsyncThunk(
   }
 );
 
-// ✅ Get followers of current user
+//   Get followers of current user
 export const getFollowers = createAsyncThunk(
   "community/getFollowers",
   async (_, { rejectWithValue }) => {
@@ -43,7 +43,7 @@ export const getFollowers = createAsyncThunk(
   }
 );
 
-// ✅ Get following list of current user
+//   Get following list of current user
 export const getFollowing = createAsyncThunk(
   "community/getFollowing",
   async (_, { rejectWithValue }) => {
@@ -58,7 +58,7 @@ export const getFollowing = createAsyncThunk(
   }
 );
 
-// ✅ Follow a user
+//   Follow a user
 export const followUser = createAsyncThunk(
   "community/followUser",
   async (data, { rejectWithValue }) => {
@@ -71,7 +71,7 @@ export const followUser = createAsyncThunk(
   }
 );
 
-// ✅ Unfollow a user
+//   Unfollow a user
 export const unfollowUser = createAsyncThunk(
   "community/unfollowUser",
   async (userId, { rejectWithValue }) => {

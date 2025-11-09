@@ -31,7 +31,7 @@ const notificationSlice = createSlice({
       .addCase(fetchNotifications.fulfilled, (state, action) => {
         state.loading = false;
         state.items = action.payload;
-        console.log("✅ Notifications loaded:", action.payload);
+        console.log("  Notifications loaded:", action.payload);
       })
       .addCase(fetchNotifications.rejected, (state, action) => {
         state.loading = false;

@@ -18,7 +18,7 @@ export default function AdminDashboard() {
   };
 
   const handleAnalyticsClick = () => {
-    navigate("analytics");
+    navigate("/analytics");
   };
 
   return (
@@ -28,7 +28,8 @@ export default function AdminDashboard() {
         p: { xs: 3, sm: 4 },
         borderRadius: 3,
         mx: "auto",
-        maxWidth: 800,
+        maxWidth: 1300,
+        bgcolor: "#494960ff",
         mt: 4,
       }}
     >
@@ -52,8 +53,8 @@ export default function AdminDashboard() {
         color="text.secondary"
         sx={{ mt: 2, fontSize: { xs: "0.95rem", sm: "1rem" } }}
       >
-        Use the navigation to manage users, review moderation logs, and oversee
-        platform activity.
+        Navigate like a pro — manage users, track moderation logs, and stay on
+        top of platform activity with ease
       </Typography>
 
       <Stack

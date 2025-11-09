@@ -102,6 +102,9 @@ export default function SkillList({ userId: propUserId }) {
               <TableCell sx={{ color: "#2c3e50", fontWeight: "bold" }}>
                 Status
               </TableCell>
+              <TableCell sx={{ color: "#2c3e50", fontWeight: "bold" }}>
+                Reason
+              </TableCell>
               <TableCell
                 sx={{ color: "#2c3e50", fontWeight: "bold" }}
                 align="center"
@@ -141,6 +144,9 @@ export default function SkillList({ userId: propUserId }) {
                   )}
                 </TableCell>
                 <TableCell sx={{ color: "#2c3e50" }}>{skill.status}</TableCell>
+                <TableCell sx={{ color: "#2c3e50" }}>
+                  {skill.moderation_reason || "-"}
+                </TableCell>
                 <TableCell align="center">
                   <IconButton
                     size="small"

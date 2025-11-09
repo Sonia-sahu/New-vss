@@ -63,7 +63,7 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         state.token = action.payload.access;
         state.isLoggedIn = true;
-        setToken(action.payload.access); // ✅ save token via utility
+        setToken(action.payload.access); //   save token via utility
         localStorage.setItem("user", JSON.stringify(action.payload.user));
       })
       .addCase(loginUser.rejected, (state, action) => {
@@ -75,7 +75,7 @@ const authSlice = createSlice({
       .addCase(fetchProfile.fulfilled, (state, action) => {
         state.user = action.payload;
       })
-      // ✅ Follow user
+      //   Follow user
       .addCase(followUser.fulfilled, (state, action) => {
         state.user.following = action.payload.following;
         state.user.followers = action.payload.followers;

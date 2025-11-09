@@ -54,7 +54,7 @@ export default function LoginForm() {
       setFormErrors(validateLoginForm(form, isAdmin));
     }
   };
-
+  //unwrap() is used to handle the promise returned by the dispatch function. It allows us to access the fulfilled or rejected value of the async thunk action directly, enabling easier error handling and response processing.
   return (
     <Box
       component="form"

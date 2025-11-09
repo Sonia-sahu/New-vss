@@ -67,12 +67,14 @@ function SkillForm() {
     }
 
     const formData = new FormData();
+    //formData object is used to construct key/value pairs representing form fields and their values, which can include files for upload
     formData.append("title", title);
     formData.append("description", description);
     formData.append("category", category);
     formData.append("certification", certification);
     formData.append("status", "in review");
 
+    //createSkill action is dispatched with the formData to create a new skill. it is an action creator that handles the skill creation logic, likely involving an API call to the backend server
     dispatch(createSkill(formData));
     navigate("/private-profile");
   };
@@ -81,7 +83,7 @@ function SkillForm() {
     <Paper
       elevation={6}
       sx={{
-        backgroundColor: "#aba7a7ff",
+        backgroundColor: "#c4c2c2ff",
         p: 6,
         maxWidth: 800,
         width: "100%",
@@ -98,11 +100,12 @@ function SkillForm() {
           gutterBottom
           sx={{
             fontWeight: 700,
-            color: "primary.main",
+
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             gap: 1,
+            color: "#123043ff",
           }}
         >
           Skill Submission Form
@@ -117,6 +120,14 @@ function SkillForm() {
             label="Skill Title"
             variant="outlined"
             value={title}
+            sx={{
+              "& .MuiInputBase-input": {
+                color: "#123043ff", // soft blue for input text
+              },
+              "& .MuiInputLabel-root": {
+                color: "#123043ff", // soft blue for label
+              },
+            }}
             onChange={(e) => {
               setTitle(e.target.value);
               setErrors((prev) => ({ ...prev, title: "" }));
@@ -135,6 +146,14 @@ function SkillForm() {
           <TextField
             fullWidth
             label="Skill Description"
+            sx={{
+              "& .MuiInputBase-input": {
+                color: "#123043ff", // soft blue for input text
+              },
+              "& .MuiInputLabel-root": {
+                color: "#123043ff", // soft blue for label
+              },
+            }}
             variant="outlined"
             multiline
             rows={5}
@@ -155,12 +174,32 @@ function SkillForm() {
             placeholder="Describe your skill in detail (minimum 50 characters)"
           />
 
-          <FormControl fullWidth required error={!!errors.category}>
+          <FormControl
+            fullWidth
+            required
+            error={!!errors.category}
+            sx={{
+              "& .MuiInputBase-input": {
+                color: "#123043ff", // soft blue for input text
+              },
+              "& .MuiInputLabel-root": {
+                color: "#123043ff", // soft blue for label
+              },
+            }}
+          >
             <InputLabel id="category-label">Skill Category</InputLabel>
             <Select
               labelId="category-label"
               value={category}
               label="Skill Category"
+              sx={{
+                "& .MuiInputBase-input": {
+                  color: "#123043ff", // soft blue for input text
+                },
+                "& .MuiInputLabel-root": {
+                  color: "#123043ff", // soft blue for label
+                },
+              }}
               onChange={(e) => {
                 setCategory(e.target.value);
                 setErrors((prev) => ({ ...prev, category: "" }));

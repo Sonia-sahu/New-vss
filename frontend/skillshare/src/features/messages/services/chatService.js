@@ -1,7 +1,7 @@
 import API from "../../../services/api"; // adjust path if needed
 
 const messagingService = {
-  // ✅ Get all conversations
+  //   Get all conversations
   getConversations: async () => {
     try {
       const res = await API.get("/message/conversations/");
@@ -12,7 +12,7 @@ const messagingService = {
     }
   },
 
-  // ✅ Get all chat users
+  //   Get all chat users
   getChatUsers: async () => {
     try {
       const res = await API.get("/message/users/");
@@ -23,7 +23,7 @@ const messagingService = {
     }
   },
 
-  // ✅ Start private chat
+  //   Start private chat
   //   startChat: async (userId) => {
   //     try {
   //       const res = await API.post("/message/start_chat/", { user_id: userId });
@@ -38,7 +38,7 @@ const messagingService = {
     return res.data;
   },
 
-  // ✅ Get messages for a thread/chat
+  //   Get messages for a thread/chat
   getMessages: async (threadId) => {
     try {
       const res = await API.get(`/message/messages/${threadId}/`);
@@ -49,7 +49,7 @@ const messagingService = {
     }
   },
 
-  // ✅ Send message
+  //   Send message
   sendMessage: async ({ chatId, content }) => {
     try {
       const res = await API.post("/message/send_message/", {

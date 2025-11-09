@@ -66,7 +66,7 @@ const MessageThread = () => {
       {/* Chat Messages */}
       <Box
         sx={{
-          border: "1px solid rgba(255,255,255,0.1)", // ✅ subtle border
+          border: "1px solid rgba(255,255,255,0.1)", //   subtle border
           borderRadius: 2,
           p: 2,
           mb: 2,
@@ -75,7 +75,7 @@ const MessageThread = () => {
           display: "flex",
           flexDirection: "column",
           gap: 1.5,
-          bgcolor: "background.paper", // ✅ dark paper background
+          bgcolor: "background.paper", //dark paper background
         }}
       >
         {messages.length > 0 ? (
@@ -84,7 +84,7 @@ const MessageThread = () => {
               key={msg.id}
               sx={{
                 alignSelf: msg.is_sender ? "flex-end" : "flex-start",
-                bgcolor: msg.is_sender ? "primary.main" : "grey.800", // ✅ dark bubble
+                bgcolor: msg.is_sender ? "primary.main" : "grey.800",
                 color: msg.is_sender ? "#fff" : "text.primary",
                 px: 2,
                 py: 1.5,
@@ -112,10 +112,10 @@ const MessageThread = () => {
       {/* Message Input */}
       <Box
         sx={{
-          borderTop: "1px solid rgba(255,255,255,0.1)", // ✅ subtle divider
+          borderTop: "1px solid rgba(255,255,255,0.1)",
           pt: 2,
-          bgcolor: "background.paper", // ✅ consistent input background
-          boxShadow: "0 -2px 8px rgba(0,0,0,0.2)", // ✅ stronger shadow for depth
+          bgcolor: "background.paper", //consistent input background
+          boxShadow: "0 -2px 8px rgba(0,0,0,0.2)", //  stronger shadow for depth
         }}
       >
         <MessageInput chatId={chatId} />

@@ -48,7 +48,7 @@ import { useState, useEffect } from "react";
 import { Box, Container } from "@mui/material";
 import { useSelector } from "react-redux";
 import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar"; // ✅ Import Sidebar
+import Sidebar from "../components/Sidebar"; //   Import Sidebar
 import {
   connectNotificationsSocket,
   disconnectNotificationsSocket,

@@ -103,7 +103,7 @@ export default function WorkshopForm() {
       elevation={3}
       sx={{
         width: "100%",
-        maxWidth: 1000, // ✅ Increased width
+        maxWidth: 1000, //   Increased width
         mx: "auto",
         mt: 5,
         p: 4,

@@ -1,15 +1,15 @@
 import API from "../../../services/api";
 
-// ✅ Fetch moderation logs
+//   Fetch moderation logs
 export const getModerationLogs = () => API.get("/adminpanel/logs/");
 
-// ✅ Fetch all users
+//   Fetch all users
 export const getAllUsers = () => API.get("/adminpanel/users/");
 
-// ✅ Delete a user
+//   Delete a user
 export const deleteUserById = (id) => API.delete(`/adminpanel/users/${id}/`);
 
-// ✅ Edit a user
+//   Edit a user
 export const updateUserById = (id, data) =>
   API.put(`/adminpanel/users/${id}/`, data);
 

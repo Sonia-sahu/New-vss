@@ -1,16 +1,22 @@
 from rest_framework import serializers
 from .models import Skill, SkillAnalytics
-
+from adminpanel.models import ModerationLog
 class SkillSerializer(serializers.ModelSerializer):
     certification_url = serializers.SerializerMethodField()
+    moderation_reason = serializers.SerializerMethodField()
 
     class Meta:
         model = Skill
         fields = [
             'id', 'user', 'title', 'description', 'category',
-            'created_at', 'certification', 'status', 'certification_url'
+            'created_at', 'certification', 'status', 'certification_url', 
+            'moderation_reason'
         ]
         read_only_fields = ['id', 'user', 'created_at']
+
+    def get_moderation_reason(self, obj):
+        log = ModerationLog.objects.filter(skill=obj).order_by('-timestamp').first()
+        return log.reason if log else None
 
     def get_certification_url(self, obj):
         request = self.context.get('request')

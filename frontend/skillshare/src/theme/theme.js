@@ -139,7 +139,7 @@ export const getTheme = () =>
       MuiSvgIcon: {
         styleOverrides: {
           root: {
-            color: "#f3f4f6", // ✅ Bright light color for icons
+            color: "#f3f4f6", //   Bright light color for icons
           },
         },
       },

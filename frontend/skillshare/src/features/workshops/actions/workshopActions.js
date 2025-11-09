@@ -1,7 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import API from "../../../services/api";
 
-// ✅ Fetch all workshops
+//  Fetch all workshops
+
+//async keyword is used to handle asynchronous operations and it always returns a promise
+//await keyword is used to wait for a promise to resolve before moving to the next line of code
+//createAsyncThunk is a utility from Redux Toolkit that simplifies the process of creating asynchronous actions in Redux
+//rejectWithValue is a utility function provided by createAsyncThunk to handle rejected promises and pass custom error messages to the reducers
 export const fetchWorkshops = createAsyncThunk(
   "workshops/fetchWorkshops",
   async (_, { rejectWithValue }) => {
@@ -17,7 +22,7 @@ export const fetchWorkshops = createAsyncThunk(
   }
 );
 
-// ✅ Fetch single workshop by ID
+//  Fetch single workshop by ID
 export const fetchWorkshopById = createAsyncThunk(
   "workshops/fetchWorkshopById",
   async (id, { rejectWithValue }) => {
@@ -33,7 +38,7 @@ export const fetchWorkshopById = createAsyncThunk(
   }
 );
 
-// ✅ Create workshop
+//  Create workshop
 export const createWorkshop = createAsyncThunk(
   "workshops/createWorkshop",
   async (data, { rejectWithValue }) => {
@@ -49,7 +54,7 @@ export const createWorkshop = createAsyncThunk(
   }
 );
 
-// ✅ Update workshop
+//  Update workshop
 export const updateWorkshop = createAsyncThunk(
   "workshops/updateWorkshop",
   async ({ id, data }, { rejectWithValue }) => {
@@ -65,7 +70,7 @@ export const updateWorkshop = createAsyncThunk(
   }
 );
 
-// ✅ Delete workshop
+//  Delete workshop
 export const deleteWorkshop = createAsyncThunk(
   "workshops/deleteWorkshop",
   async (id, { rejectWithValue }) => {
@@ -81,7 +86,7 @@ export const deleteWorkshop = createAsyncThunk(
   }
 );
 
-// ✅ Register user for a workshop
+//  Register user for a workshop
 export const registerWorkshop = createAsyncThunk(
   "workshops/registerWorkshop",
   async (data, { rejectWithValue }) => {
@@ -97,14 +102,13 @@ export const registerWorkshop = createAsyncThunk(
   }
 );
 
-// ✅ Fetch current user's registrations
+//  Fetch current user's registrations
 export const fetchMyRegistrations = createAsyncThunk(
   "workshops/fetchMyRegistrations",
   async (_, { rejectWithValue }) => {
     try {
       const res = await API.get("/workshops/my-registrations/");
 
-      // If the response is empty, you can handle it here if needed.
       if (!res.data || res.data.length === 0) {
         console.log("No registrations found.");
       }

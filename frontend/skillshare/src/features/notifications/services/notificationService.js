@@ -29,7 +29,7 @@ export const connectNotificationsSocket = () => {
   socket = new WebSocket(wsUrl);
 
   socket.onopen = () => {
-    console.log("✅ Connected to notification WebSocket");
+    console.log("  Connected to notification WebSocket");
   };
 
   socket.onmessage = (event) => {

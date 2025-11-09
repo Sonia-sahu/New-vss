@@ -62,7 +62,7 @@ export default function DashboardPage() {
         color: "#f3f4f6",
       }}
     >
-      {/* ✅ Welcome Section */}
+      {/*   Welcome Section */}
       <Box sx={{ px: 4, mb: 4 }}>
         <Typography
           variant="h5"
@@ -78,7 +78,7 @@ export default function DashboardPage() {
         </Typography>
       </Box>
 
-      {/* ✅ Dashboard Cards */}
+      {/*   Dashboard Cards */}
       <Box sx={{ px: 4 }}>
         <Grid container spacing={3} justifyContent="center">
           {sections.map((section, index) => (
@@ -86,8 +86,8 @@ export default function DashboardPage() {
               <Card
                 onClick={() => navigate(section.path)}
                 sx={{
-                  width: 280, // ✅ Fixed width
-                  height: 220, // ✅ Fixed height
+                  width: 280, //   Fixed width
+                  height: 220, //   Fixed height
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "space-between",

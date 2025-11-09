@@ -1,16 +1,20 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import API from "../../../services/api";
 
-// Already present
+//  Fetch all users with try-catch
 export const fetchAllUsers = createAsyncThunk(
   "admin/fetchAllUsers",
-  async () => {
-    const res = await API.get("/adminpanel/users/");
-    return res.data;
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await API.get("/adminpanel/users/");
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || err.message);
+    }
   }
 );
 
-// ✅ Delete a user
+//  Delete a user
 export const deleteUser = createAsyncThunk(
   "admin/deleteUser",
   async (id, { rejectWithValue }) => {
@@ -23,7 +27,7 @@ export const deleteUser = createAsyncThunk(
   }
 );
 
-// ✅ Edit a user
+//  Edit a user
 export const editUser = createAsyncThunk(
   "admin/editUser",
   async ({ id, ...data }, { rejectWithValue }) => {
@@ -36,7 +40,7 @@ export const editUser = createAsyncThunk(
   }
 );
 
-//✅ Fetch moderation logs
+//  Fetch moderation logs
 export const fetchModerationLogs = createAsyncThunk(
   "admin/fetchModerationLogs",
   async (_, { rejectWithValue }) => {
@@ -55,7 +59,6 @@ export const moderateSkill = createAsyncThunk(
   async ({ id, data }, { rejectWithValue }) => {
     try {
       const res = await API.patch(`adminpanel/skills/${id}/moderate/`, data);
-
       return res.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Moderation failed");
@@ -63,7 +66,7 @@ export const moderateSkill = createAsyncThunk(
   }
 );
 
-// Delete a skill
+//  Delete a skill
 export const deleteSkill = createAsyncThunk(
   "admin/deleteSkill",
   async (id, { rejectWithValue }) => {

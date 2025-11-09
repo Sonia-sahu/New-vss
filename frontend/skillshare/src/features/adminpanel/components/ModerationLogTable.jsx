@@ -182,8 +182,15 @@ export default function ModerationTable() {
                     placeholder="Enter reason"
                     size="small"
                     fullWidth
-                    disabled={isFinalized}
-                    sx={{ input: { color: "#2c3e50" } }}
+                    InputProps={{
+                      readOnly: isFinalized,
+                    }}
+                    sx={{
+                      "& .MuiInputBase-input": {
+                        color: "#123043ff",
+                      },
+                      input: { color: "#2c3e50" },
+                    }}
                   />
                 </TableCell>
                 <TableCell>
@@ -208,7 +215,7 @@ export default function ModerationTable() {
                       disabled={isFinalized}
                       title="Approve"
                     >
-                      <CheckCircleIcon />
+                      <CheckCircleIcon sx={{ color: "#57b696ff" }} />
                     </IconButton>
                     <IconButton
                       color="error"
@@ -216,7 +223,7 @@ export default function ModerationTable() {
                       disabled={isFinalized}
                       title="Reject"
                     >
-                      <CancelIcon />
+                      <CancelIcon sx={{ color: "#c92623ff" }} />
                     </IconButton>
                     <IconButton
                       color="warning"
@@ -224,14 +231,14 @@ export default function ModerationTable() {
                       disabled={isFinalized}
                       title="On Hold"
                     >
-                      <PauseCircleIcon />
+                      <PauseCircleIcon sx={{ color: "#2d5653ff" }} />
                     </IconButton>
 
                     <IconButton
                       onClick={() => handleDeleteClick(skill.id)}
                       aria-label="delete"
                     >
-                      <DeleteIcon />
+                      <DeleteIcon sx={{ color: "#2b283bff" }} />
                     </IconButton>
                   </Stack>
                 </TableCell>

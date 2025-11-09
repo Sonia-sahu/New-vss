@@ -55,7 +55,7 @@ export default function Navbar({ toggleSidebar = () => {} }) {
     <AppBar
       position="fixed"
       sx={{
-        backgroundColor: "#1f3b73", // ✅ Solid blue background
+        backgroundColor: "#1f3b73", //   Solid blue background
         color: theme.palette.text.primary,
       }}
     >

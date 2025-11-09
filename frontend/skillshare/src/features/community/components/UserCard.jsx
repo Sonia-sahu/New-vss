@@ -41,7 +41,7 @@ export default function UserCard({ user }) {
     handleMenuClose();
   };
 
-  // ✅ Navigate to public profile
+  //   Navigate to public profile
   const openProfile = () => navigate(`/community/profile/${user.id}`);
 
   return (

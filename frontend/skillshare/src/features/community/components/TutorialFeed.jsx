@@ -26,12 +26,12 @@ const TutorialFeed = () => {
 
   return (
     <Grid container spacing={3} sx={{ px: 3, py: 2 }}>
-      {/* ✅ Heading on one line */}
+      {/*   Heading on one line */}
       <Grid item xs={12}>
         <Typography variant="h6">Watch Tutorials</Typography>
       </Grid>
 
-      {/* ✅ Cards below the heading */}
+      {/*   Cards below the heading */}
       {tutorials.map((tutorial) => (
         <Grid item key={tutorial.id} xs={12} sm={6} md={4} lg={3}>
           <TutorialCard tutorial={tutorial} />
