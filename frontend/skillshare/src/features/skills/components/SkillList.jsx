@@ -1,8 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { fetchSkills, deleteSkill, updateSkill } from "../actions/skillActions";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -22,11 +18,13 @@ import {
   FormControl,
   IconButton,
 } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { useDispatch } from "react-redux";
+import { deleteSkill, updateSkill } from "../actions/skillActions";
 
-export default function SkillList({ userId: propUserId }) {
+export default function SkillList({ skills, isOwner }) {
   const dispatch = useDispatch();
-  const skills = useSelector((state) => state.skills.skills);
-  const userId = propUserId || useSelector((state) => state.community.user?.id);
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selectedSkillId, setSelectedSkillId] = useState(null);
@@ -36,12 +34,6 @@ export default function SkillList({ userId: propUserId }) {
     description: "",
     category: "",
   });
-
-  useEffect(() => {
-    if (userId) {
-      dispatch(fetchSkills(userId));
-    }
-  }, [dispatch, userId]);
 
   const handleDeleteClick = (skillId) => {
     setSelectedSkillId(skillId);
@@ -69,11 +61,8 @@ export default function SkillList({ userId: propUserId }) {
 
   const handleEditSubmit = () => {
     if (selectedSkillId) {
-      console.log("Updating skill with ID:", selectedSkillId);
       dispatch(updateSkill({ id: selectedSkillId, data: editSkill }));
       setOpenEditDialog(false);
-    } else {
-      console.error("Skill ID is missing");
     }
   };
 
@@ -87,82 +76,92 @@ export default function SkillList({ userId: propUserId }) {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ color: "#2c3e50", fontWeight: "bold" }}>
+              <TableCell sx={{ fontWeight: "bold", color: "#2c3e50" }}>
                 Title
               </TableCell>
-              <TableCell sx={{ color: "#2c3e50", fontWeight: "bold" }}>
+              <TableCell sx={{ fontWeight: "bold", color: "#2c3e50" }}>
                 Description
               </TableCell>
-              <TableCell sx={{ color: "#2c3e50", fontWeight: "bold" }}>
+              <TableCell sx={{ fontWeight: "bold", color: "#2c3e50" }}>
                 Category
               </TableCell>
-              <TableCell sx={{ color: "#2c3e50", fontWeight: "bold" }}>
-                Certification
-              </TableCell>
-              <TableCell sx={{ color: "#2c3e50", fontWeight: "bold" }}>
-                Status
-              </TableCell>
-              <TableCell sx={{ color: "#2c3e50", fontWeight: "bold" }}>
-                Reason
-              </TableCell>
-              <TableCell
-                sx={{ color: "#2c3e50", fontWeight: "bold" }}
-                align="center"
-              >
-                Actions
-              </TableCell>
+              {isOwner && (
+                <>
+                  <TableCell sx={{ fontWeight: "bold", color: "#2c3e50" }}>
+                    Certification
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", color: "#2c3e50" }}>
+                    Status
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", color: "#2c3e50" }}>
+                    Reason
+                  </TableCell>
+                  <TableCell
+                    sx={{ fontWeight: "bold", color: "#2c3e50" }}
+                    align="center"
+                  >
+                    Actions
+                  </TableCell>
+                </>
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
-            {skills.map((skill, index) => (
-              <TableRow
-                key={skill.id}
-                sx={{
-                  backgroundColor: index % 2 === 0 ? "#d6d3d3ff" : "#d6d3d3ff",
-                  "&:hover": { backgroundColor: "#b3b1b1ff" },
-                }}
-              >
-                <TableCell sx={{ color: "#2c3e50" }}>{skill.title}</TableCell>
-                <TableCell sx={{ color: "#2c3e50" }}>
+            {skills.map((skill) => (
+              <TableRow key={skill.id}>
+                <TableCell sx={{ fontWeight: "bold", color: "#2c3e50" }}>
+                  {skill.title}
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold", color: "#2c3e50" }}>
                   {skill.description}
                 </TableCell>
-                <TableCell sx={{ color: "#2c3e50" }}>
+                <TableCell sx={{ fontWeight: "bold", color: "#2c3e50" }}>
                   {skill.category}
                 </TableCell>
-                <TableCell sx={{ color: "#2c3e50" }}>
-                  {skill.certification_url ? (
-                    <a
-                      href={skill.certification_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ color: "#2c3e50", textDecoration: "underline" }}
+                {isOwner && (
+                  <>
+                    <TableCell sx={{ fontWeight: "bold", color: "#2c3e50" }}>
+                      {skill.certification_url ? (
+                        <a
+                          href={skill.certification_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          View PDF
+                        </a>
+                      ) : (
+                        "No certification uploaded"
+                      )}
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: "bold", color: "#2c3e50" }}>
+                      {skill.status}
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: "bold", color: "#2c3e50" }}>
+                      {skill.moderation_reason || "-"}
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{ fontWeight: "bold", color: "#2c3e50" }}
                     >
-                      View PDF
-                    </a>
-                  ) : (
-                    "No certification uploaded"
-                  )}
-                </TableCell>
-                <TableCell sx={{ color: "#2c3e50" }}>{skill.status}</TableCell>
-                <TableCell sx={{ color: "#2c3e50" }}>
-                  {skill.moderation_reason || "-"}
-                </TableCell>
-                <TableCell align="center">
-                  <IconButton
-                    size="small"
-                    color="primary"
-                    onClick={() => handleEditClick(skill)}
-                  >
-                    <EditIcon fontSize="small" sx={{ color: "#2b283bff" }} />
-                  </IconButton>
-                  <IconButton
-                    size="small"
-                    color="error"
-                    onClick={() => handleDeleteClick(skill.id)}
-                  >
-                    <DeleteIcon fontSize="small" sx={{ color: "#2b283bff" }} />
-                  </IconButton>
-                </TableCell>
+                      <IconButton
+                        size="small"
+                        onClick={() => handleEditClick(skill)}
+                      >
+                        <EditIcon
+                          sx={{ fontWeight: "bold", color: "#2c3e50" }}
+                        />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        onClick={() => handleDeleteClick(skill.id)}
+                      >
+                        <DeleteIcon
+                          sx={{ fontWeight: "bold", color: "#2c3e50" }}
+                        />
+                      </IconButton>
+                    </TableCell>
+                  </>
+                )}
               </TableRow>
             ))}
           </TableBody>
@@ -176,19 +175,27 @@ export default function SkillList({ userId: propUserId }) {
           Are you sure you want to delete this skill?
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCancelDelete} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleConfirmDelete} color="primary">
-            Delete
-          </Button>
+          <Button onClick={handleCancelDelete}>Cancel</Button>
+          <Button onClick={handleConfirmDelete}>Delete</Button>
         </DialogActions>
       </Dialog>
 
       {/* Edit Skill Dialog */}
       <Dialog open={openEditDialog} onClose={() => setOpenEditDialog(false)}>
-        <DialogTitle>Edit Skill</DialogTitle>
-        <DialogContent>
+        <DialogTitle
+          sx={{
+            backgroundColor: "#f9f9f9", // light background
+            color: "#2c3e50", // dark text
+          }}
+        >
+          Edit Skill
+        </DialogTitle>
+
+        <DialogContent
+          sx={{
+            backgroundColor: "#f9f9f9", // light background
+          }}
+        >
           <TextField
             label="Title"
             fullWidth
@@ -197,7 +204,13 @@ export default function SkillList({ userId: propUserId }) {
               setEditSkill({ ...editSkill, title: e.target.value })
             }
             margin="normal"
+            sx={{
+              "& .MuiInputBase-input": { color: "#2c3e50" },
+              "& .MuiInputLabel-root": { color: "#2c3e50" },
+              "& .MuiOutlinedInput-notchedOutline": { borderColor: "#2c3e50" },
+            }}
           />
+
           <TextField
             label="Description"
             fullWidth
@@ -206,28 +219,42 @@ export default function SkillList({ userId: propUserId }) {
               setEditSkill({ ...editSkill, description: e.target.value })
             }
             margin="normal"
+            sx={{
+              "& .MuiInputBase-input": { color: "#2c3e50" },
+              "& .MuiInputLabel-root": { color: "#2c3e50" },
+              "& .MuiOutlinedInput-notchedOutline": { borderColor: "#2c3e50" },
+            }}
           />
+
           <FormControl fullWidth margin="normal">
-            <InputLabel>Category</InputLabel>
+            <InputLabel sx={{ color: "#2c3e50" }}>Category</InputLabel>
             <Select
               value={editSkill.category}
               onChange={(e) =>
                 setEditSkill({ ...editSkill, category: e.target.value })
               }
+              sx={{
+                color: "#2c3e50",
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#2c3e50",
+                },
+              }}
             >
-              <MenuItem value="tech">Tech</MenuItem>
-              <MenuItem value="art">Art</MenuItem>
-              <MenuItem value="cooking">Cooking</MenuItem>
+              <MenuItem value="tech">Technology</MenuItem>
+              <MenuItem value="art">Art & Design</MenuItem>
+              <MenuItem value="cooking">Culinary Arts</MenuItem>
+              <MenuItem value="music">Music & Audio</MenuItem>
             </Select>
           </FormControl>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenEditDialog(false)} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleEditSubmit} color="primary">
-            Save
-          </Button>
+
+        <DialogActions
+          sx={{
+            backgroundColor: "#f9f9f9", // light background
+          }}
+        >
+          <Button onClick={() => setOpenEditDialog(false)}>Cancel</Button>
+          <Button onClick={handleEditSubmit}>Save</Button>
         </DialogActions>
       </Dialog>
     </div>

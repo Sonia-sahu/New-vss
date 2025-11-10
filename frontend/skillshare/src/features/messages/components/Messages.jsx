@@ -78,7 +78,7 @@ const Messages = () => {
               }}
             >
               <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                <Avatar src={user.profile_image || ""}>
+                <Avatar src={user.profile_picture || ""}>
                   {user.username?.[0]?.toUpperCase() || "U"}
                 </Avatar>
                 <Box>

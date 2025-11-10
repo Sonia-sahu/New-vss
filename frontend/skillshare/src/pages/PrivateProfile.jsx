@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSkillAction } from "../features/community/actions/communityActions";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -15,27 +14,42 @@ import {
 } from "@mui/material";
 import { fetchSkills } from "../features/skills/actions/skillActions";
 import SkillList from "../features/skills/components/SkillList";
-import { fetchProfile } from "../features/auth/actions/authActions";
 import EditIcon from "@mui/icons-material/Edit";
+import API from "../services/api";
 
 export default function PrivateProfilePage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const { profileStatus, profileError } = useSelector(
-    (state) => state.community
-  );
   const { user } = useSelector((state) => state.auth);
+  const { skills } = useSelector((state) => state.skills);
+
   const profileImageUrl = user?.profile_picture
     ? `http://127.0.0.1:8000${user.profile_picture}`
     : "/default-profile.png";
 
   useEffect(() => {
-    dispatch(fetchProfile(user));
-    dispatch(fetchSkills(user));
-  }, [dispatch]);
+    if (user?.id) {
+      dispatch(fetchSkills(user.id));
 
-  if (profileStatus === "loading") {
+      const fetchProfile = async () => {
+        try {
+          const res = await API.get(`/community/profile/${user.id}/`);
+          setProfile(res.data);
+        } catch (error) {
+          console.error("Error fetching private profile:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchProfile();
+    }
+  }, [dispatch, user?.id]);
+
+  if (loading) {
     return (
       <Box
         sx={{
@@ -51,15 +65,7 @@ export default function PrivateProfilePage() {
     );
   }
 
-  if (profileStatus === "failed") {
-    return (
-      <Typography variant="h6" textAlign="center" mt={5}>
-        Error: {profileError}
-      </Typography>
-    );
-  }
-
-  if (!user) {
+  if (!profile) {
     return (
       <Typography variant="h6" textAlign="center" mt={5}>
         Profile not found
@@ -84,7 +90,6 @@ export default function PrivateProfilePage() {
                   height: { xs: 70, md: 100 },
                   fontSize: { xs: 28, md: 40 },
                   color: "#2c3e50",
-
                   bgcolor: "primary.main",
                 }}
               >
@@ -96,8 +101,15 @@ export default function PrivateProfilePage() {
                 {user.username}
               </Typography>
               <Typography variant="body2" color="#2c3e50">
-                {user.expertise || "No expertise specified"}
+                {profile.expertise || "No expertise specified"}
               </Typography>
+            </Grid>
+            <Grid item xs={12} md={2}>
+              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                <IconButton onClick={() => navigate("/profile")}>
+                  <EditIcon sx={{ color: "#2c3e50" }} />
+                </IconButton>
+              </Box>
             </Grid>
           </Grid>
 
@@ -111,7 +123,9 @@ export default function PrivateProfilePage() {
                 spacing={1}
                 sx={{ bgcolor: "#2c3e50", py: 1, px: 1, borderRadius: 1 }}
               >
-                <Typography fontWeight="bold"> Followers</Typography>
+                <Typography fontWeight="bold" color="#fff">
+                  Followers
+                </Typography>
                 <Box
                   sx={{
                     px: 1.5,
@@ -123,7 +137,7 @@ export default function PrivateProfilePage() {
                     fontSize: "0.875rem",
                   }}
                 >
-                  {user.followers?.length || 0}
+                  {profile?.followers?.length || 0}
                 </Box>
               </Stack>
             </Grid>
@@ -135,7 +149,9 @@ export default function PrivateProfilePage() {
                 spacing={1}
                 sx={{ bgcolor: "#2c3e50", py: 1, px: 1, borderRadius: 1 }}
               >
-                <Typography fontWeight="bold">Following</Typography>
+                <Typography fontWeight="bold" color="#fff">
+                  Following
+                </Typography>
                 <Box
                   sx={{
                     px: 1.5,
@@ -147,15 +163,10 @@ export default function PrivateProfilePage() {
                     fontSize: "0.875rem",
                   }}
                 >
-                  {user.following?.length || 0}
+                  {profile?.following?.length || 0}
                 </Box>
               </Stack>
             </Grid>
-            <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-              <IconButton onClick={() => navigate("/profile")}>
-                <EditIcon sx={{ color: "#2c3e50" }} />
-              </IconButton>
-            </Box>
           </Grid>
 
           {/* Bio Section */}
@@ -168,7 +179,7 @@ export default function PrivateProfilePage() {
               color="text.secondary"
               sx={{ mt: 1, color: "#2c3e50" }}
             >
-              {user.bio || "You haven’t added a bio yet."}
+              {profile.bio || "You haven’t added a bio yet."}
             </Typography>
           </Box>
 
@@ -182,7 +193,7 @@ export default function PrivateProfilePage() {
             >
               Your Skills
             </Typography>
-            <SkillList userId={user.id} />
+            <SkillList skills={skills} isOwner={true} />{" "}
           </Box>
         </Paper>
       </Container>

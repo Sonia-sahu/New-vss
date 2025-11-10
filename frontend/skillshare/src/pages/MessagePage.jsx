@@ -40,7 +40,7 @@ const MessagePage = () => {
       )}
 
       {!loading && !error && (
-        <Paper elevation={2} sx={{ p: 3, borderRadius: 3 }}>
+        <Paper elevation={2} sx={{ p: 3, borderRadius: 3, bgcolor: "#1f3b73" }}>
           <MessageList conversations={conversations} />
         </Paper>
       )}

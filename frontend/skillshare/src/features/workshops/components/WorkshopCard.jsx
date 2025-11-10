@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-
+import { deleteWorkshop } from "../actions/workshopActions";
 import {
   Card,
   CardContent,
@@ -28,6 +28,8 @@ export default function WorkshopCard({ workshop }) {
   const navigate = useNavigate();
 
   const { user: currentUser } = useSelector((state) => state.auth);
+  const isAdmin = currentUser?.is_admin || currentUser?.is_superuser;
+
   const userRegistrations = useSelector(selectMyRegistrations);
 
   const isRegistered =
@@ -89,6 +91,20 @@ export default function WorkshopCard({ workshop }) {
   const handleCardClick = () => {
     if (isRegistered) {
       setOpenModal(true);
+    }
+  };
+
+  const handleDelete = () => {
+    if (window.confirm("Are you sure you want to delete this workshop?")) {
+      dispatch(deleteWorkshop(workshop.id))
+        .unwrap()
+        .then(() => {
+          toast.success("Workshop deleted successfully.");
+        })
+        .catch((err) => {
+          toast.error("Failed to delete workshop.");
+          console.error("Delete error:", err);
+        });
     }
   };
 
@@ -178,6 +194,16 @@ export default function WorkshopCard({ workshop }) {
               Join Session
             </Button>
           )}
+          {isAdmin && (
+            <Button
+              size="small"
+              variant="outlined"
+              color="error"
+              onClick={handleDelete}
+            >
+              Delete
+            </Button>
+          )}
 
           {isRegistered && workshop.status === "completed" && (
             <Button
@@ -204,7 +230,7 @@ export default function WorkshopCard({ workshop }) {
         <Box
           sx={{
             p: 4,
-            bgcolor: "background.paper",
+            bgcolor: "gray",
             maxWidth: 400,
             mx: "auto",
             mt: 10,

@@ -33,3 +33,4 @@ def new_user_suggestions(sender, instance, created, **kwargs):
     except Exception:
         # fallback: do nothing
         pass
+

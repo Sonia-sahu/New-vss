@@ -206,7 +206,11 @@ export default function PublicProfilePage() {
             >
               Skills
             </Typography>
-            <SkillList skills={skills} />
+
+            <SkillList
+              skills={skills.filter((skill) => skill.status !== "rejected")}
+              isOwner={false}
+            />
           </Box>
 
           {/* Start Chatting Button */}

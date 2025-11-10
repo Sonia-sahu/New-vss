@@ -70,7 +70,7 @@ export default function Navbar({ toggleSidebar = () => {} }) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
-            SkillShare Platform
+            SkillHarbor Platform
           </Typography>
         </Box>
 

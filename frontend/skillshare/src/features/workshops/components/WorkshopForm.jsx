@@ -15,12 +15,13 @@ import {
   Switch,
 } from "@mui/material";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function WorkshopForm() {
   const dispatch = useDispatch();
   const { skills, loading } = useSelector((state) => state.skills);
   const { user } = useSelector((state) => state.auth);
-
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     id: "",
     title: "",
@@ -91,11 +92,19 @@ export default function WorkshopForm() {
       skill: form.skill_id,
     };
 
-    dispatch(createWorkshop(payload));
-    toast.success("Workshop created successfully!", {
-      position: "top-center",
-      autoClose: 3000,
-    });
+    dispatch(createWorkshop(payload))
+      .unwrap()
+      .then(() => {
+        toast.success("Workshop created successfully!", {
+          position: "top-center",
+          autoClose: 3000,
+        });
+        navigate("/dashboard");
+      })
+      .catch((error) => {
+        toast.error("Failed to create workshop.");
+        console.error("Create error:", error);
+      });
   };
 
   return (

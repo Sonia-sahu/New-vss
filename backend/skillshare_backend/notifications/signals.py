@@ -20,3 +20,4 @@ def notify_users_new_user(sender, instance, created, **kwargs):
                 content=f"New user {instance.username} joined! You might want to follow them."
             )
         print(f"✅ Sent suggestions to {existing_users.count()} users")
+

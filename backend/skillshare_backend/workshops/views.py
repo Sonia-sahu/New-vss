@@ -39,21 +39,36 @@ class WorkshopListCreateView(generics.ListCreateAPIView):
             meeting_url=meeting_url
         )
 
-
 class WorkshopDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Workshop.objects.all()  # ✅ Ensure queryset is defined
     serializer_class = WorkshopSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
         workshop = super().get_object()
-        now = timezone.now()
-        end_time = workshop.date + timedelta(minutes=workshop.duration_minutes)
-        if workshop.status == 'upcoming' and now > end_time:
-            workshop.status = 'completed'
-            workshop.save()
 
-        if self.request.method in ['PUT', 'PATCH', 'DELETE'] and workshop.host != self.request.user:
-            raise PermissionDenied("You do not have permission to modify this workshop.")
+        # ✅ Safely update status if workshop has ended
+        try:
+            if workshop.date and workshop.duration_minutes:
+                now = timezone.now()
+                end_time = workshop.date + timedelta(minutes=workshop.duration_minutes)
+                if workshop.status == 'upcoming' and now > end_time:
+                    workshop.status = 'completed'
+                    workshop.save()
+        except Exception as e:
+            print("Error updating workshop status:", e)
+
+        # ✅ Permission check for update/delete
+        user = self.request.user
+        is_admin = getattr(user, 'is_admin', False)
+        try:
+            if self.request.method in ['PUT', 'PATCH', 'DELETE']:
+                if not (workshop.host == user or is_admin or user.is_superuser):
+                    raise PermissionDenied("You do not have permission to modify this workshop.")
+        except Exception as e:
+            print("Error checking permissions:", e)
+            raise PermissionDenied("Permission check failed.")
+
         return workshop
 
     def perform_update(self, serializer):

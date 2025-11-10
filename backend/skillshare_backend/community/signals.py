@@ -14,3 +14,4 @@ def follow_created_notify(sender, instance, created, **kwargs):
 
     content = f"{follower.username} started following you."
     create_notification(following, "follow", content)
+

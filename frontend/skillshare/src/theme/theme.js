@@ -47,7 +47,7 @@ export const getTheme = () =>
         styleOverrides: {
           root: {
             borderRadius: 8,
-            padding: "0.75rem 1.5rem",
+            padding: "0.5rem 1rem",
             background: "linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)",
             color: "#fff",
             transition: "all 0.2s ease",
@@ -65,7 +65,7 @@ export const getTheme = () =>
               background: "rgba(255,255,255,0.15)",
               color: "#fff",
               borderRadius: 12,
-              padding: "0.75rem 1.5rem",
+              padding: "0.5rem 1rem",
               "&:hover": {
                 background: "rgba(255,255,255,0.25)",
                 boxShadow: "0 8px 24px rgba(0,98,255,0.3)",

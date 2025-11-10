@@ -125,54 +125,8 @@ class ForgotPasswordView(APIView):
 
     permission_classes = [permissions.AllowAny]
 
-    def post(self, request):
-        serializer = ForgotPasswordSerializer(data=request.data)
-        if serializer.is_valid():
-            email = serializer.validated_data['email']
-            try:
-                user = User.objects.get(email=email)
-            except User.DoesNotExist:
-                return Response({"error": "User with this email does not exist."}, status=400)
-
-            token = PasswordResetTokenGenerator().make_token(user)
-            uid = urlsafe_base64_encode(force_bytes(user.pk))
-            reset_link = f"http://localhost:5173/reset-password/{uid}/{token}/"
-
-            try:
-                send_mail(
-                    subject="Password Reset Request",
-                    message=f"Click the link to reset your password: {reset_link}",
-                    from_email="helperofmineai@gmail.com",
-                    recipient_list=[email],
-                    fail_silently=False,
-                )
-            except Exception as e:
-                print("Email sending error:", e)  # 👈 This will show the exact error
-                return Response({"error": "Failed to send email."}, status=500)
-
-            return Response({"message": "Password reset link sent."}, status=status.HTTP_200_OK)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def post(self, request):
-        serializer = ForgotPasswordSerializer(data=request.data)
-        if serializer.is_valid():
-            email = serializer.validated_data['email']
-            user = User.objects.get(email=email)
-            token = PasswordResetTokenGenerator().make_token(user)
-            uid = urlsafe_base64_encode(force_bytes(user.pk))
-            reset_link = f"http://localhost:5173/reset-password/{uid}/{token}/"
-
-            # Send email
-            send_mail(
-                subject="Password Reset Request",
-                message=f"Click the link to reset your password: {reset_link}",
-                from_email="helperofmineai@gmail.com",
-                recipient_list=[email],
-            )
-
-            return Response({"message": "Password reset link sent."}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+   
+       
     
 class ResetPasswordView(APIView):
     permission_classes = [permissions.AllowAny]
