@@ -14,6 +14,8 @@ export const fetchUsersToChat = createAsyncThunk(
 );
 
 // 🔹 Fetch conversations (new action)
+
+//Fetches the list of all conversations for the logged-in user.
 export const getConversations = createAsyncThunk(
   "chat/getConversations",
   async (_, { rejectWithValue }) => {
@@ -39,6 +41,7 @@ export const startChat = createAsyncThunk(
 );
 
 // 🔹 Get messages for a chat
+//Fetches messages for a specific conversation identified by its unique chatId.
 export const getMessages = createAsyncThunk(
   "chat/getMessages",
   async (chatId, { rejectWithValue }) => {

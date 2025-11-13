@@ -4,8 +4,8 @@ import { useParams, useLocation } from "react-router-dom";
 
 const VideoCall = () => {
   const { chatId } = useParams();
-  const location = useLocation();
-  const callContainerRef = useRef(null);
+  const location = useLocation(); //Provides the current location object which can contain state. Here, it's used to retrieve the username if set in the location's state.
+  const callContainerRef = useRef(null); //It's used here to reference the HTML element that will contain the video call UI.
 
   const username = location.state?.username || "Guest";
   const appID = 1710100243;
