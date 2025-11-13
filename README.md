@@ -112,31 +112,42 @@ frontend/
 ### 🔧 Backend (Django + DRF + Channels)
 
 1. **Install dependencies**
+
    ```bash
    pip install -r requirements.txt
    ```
 
-## Apply migrations
+2. **Apply migrations**
 
+```bash
 python manage.py migrate
+```
 
-## Create superuser
+3. **Create superuser**
 
+```bash
 python manage.py createsuperuser
+```
 
-## Run development server
+4. **Run development server**
 
+```bash
 daphne skillharbor.asgi:application
+```
 
 # Frontend (React + Vite + MUI)
 
-## Install dependencies
+1. **Install dependencies**
 
+```bash
 npm install
+```
 
-## Run dev server
+2. **Run dev server**
 
+```bash
 npm run dev
+```
 
 # 🔐 Authentication
 
